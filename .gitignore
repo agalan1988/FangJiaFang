@@ -1,6 +1,19 @@
-node_modules
-dist
+# Node.js
+node_modules/
+dist/
+.vite/
+*.log
+
+# Config y entorno
+.env
+.env.local
+.env.production
+
+# macOS
 .DS_Store
-server/public
-vite.config.ts.*
+
+# Archivos que no quieres subir
 *.tar.gz
+server/public/
+vite.config.ts.*
+
