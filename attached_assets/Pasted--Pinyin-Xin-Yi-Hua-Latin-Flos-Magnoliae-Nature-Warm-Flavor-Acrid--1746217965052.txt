@@ -1,0 +1,64 @@
+{
+  "Pinyin": "Xin Yi Hua",
+  "Latin": "Flos Magnoliae",
+  "Nature": "Warm",
+  "Flavor": "Acrid",
+  "Meridians": ["LU", "ST"],
+  "ChineseActions": [
+    {
+      "ActionPrimary": "Dispels wind-cold",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Nasal obstruction due to wind-cold",
+          "ActionsTertiary": [
+            {
+              "ActionTertiary": "Nasal obstruction and clear nasal discharge from wind-cold",
+              "HerbsCombination": ["BAI ZHI", "FANG FENG"],
+              "Formula": "XIN YI SAN"
+            },
+            {
+              "ActionTertiary": "Wind-cold attacking the Lung and Stomach with continuous, clear, watery nasal discharge",
+              "HerbsCombination": ["XI XIN", "GAN JIANG", "FU ZI"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ActionPrimary": "Opens nasal orifices",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Sinusitis and rhinitis with loss of smell",
+          "HerbsCombination": ["CANG ER ZI"],
+          "Formula": "CANG ER SAN"
+        },
+        {
+          "ActionSecondary": "Sinusitis or rhinitis due to cold",
+          "HerbsCombination": ["QIANG HUO", "FANG FENG", "XI XIN"],
+          "Formula": "XIN YI SAN"
+        },
+        {
+          "ActionSecondary": "Chronic sinusitis or rhinitis caused by damp-heat",
+          "HerbsCombination": ["SHI GAO", "DA HUANG"],
+          "Formula": "QING BI TANG"
+        },
+        {
+          "ActionSecondary": "Sinusitis or rhinitis caused by heat",
+          "HerbsCombination": ["ZHI ZI", "XUAN SHEN", "CHUAN BEI MU", "CHAI HU"]
+        },
+        {
+          "ActionSecondary": "Sinusitis or rhinitis with Lung heat",
+          "HerbsCombination": ["ZHI ZI", "HUANG QIN", "SHI GAO", "SHENG MA"],
+          "Formula": "XIN YI QING FEI YIN"
+        }
+      ]
+    }
+  ],
+  "PharmacologicalEffects": [
+    "Effects on nasal mucosa",
+    "Antihypertensive",
+    "Analgesic",
+    "Uterine stimulant",
+    "Antibiotic"
+  ]
+}

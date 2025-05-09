@@ -1,0 +1,162 @@
+Aquí está el código exacto para que la aplicación muestre correctamente las hierbas que componen una fórmula, con sus porcentajes y gramos proporcionales, cuando agregas una fórmula a la prescripción:
+
+// PrescriptionBuilder.tsx (parte que renderiza los elementos de la prescripción)
+// Esta es la parte del código que renderiza un elemento de tipo "formula" en la prescripción
+{item.type === 'formula' && item.formula && (
+  <div className="px-3 py-2 border-l-2 border-l-yellow-500">
+    {/* Cabecera de la fórmula */}
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Circle className="h-2 w-2 mr-2 text-yellow-500 fill-yellow-50/50" />
+        <p className="font-semibold text-gray-800">{item.formula.name}</p>
+        <span className="ml-2 font-semibold text-gray-700">
+          {item.quantity}g
+        </span>
+      </div>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => onRemoveItem(index)}
+        className="h-7 w-7 p-0"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+    {/* Componentes de la fórmula */}
+    <div className="ml-4 pl-2 border-l border-gray-100">
+      <div className="space-y-1 mt-1">
+        {item.formula.herbs.map((herb, idx) => {
+          // Calculamos el total de gramos de la fórmula original
+          const formulaTotal = item.formula!.totalGrams || 
+            item.formula!.herbs.reduce((sum, h) => sum + (h.grams || 0), 0);
+          
+          // Calculamos el porcentaje que representa cada hierba
+          const percentage = herb.grams ? (herb.grams / formulaTotal) * 100 : 0;
+          
+          // Calculamos los gramos proporcionales según la cantidad elegida
+          const actualGrams = Math.round((percentage * item.quantity / 100) * 10) / 10;
+          
+          return (
+            <div key={`${herb.id}-${idx}`} className="flex items-center border-b border-gray-50 pb-1 last:border-0 last:pb-0">
+              <div className="h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
+                <span className="text-[0.6rem]">{idx + 1}</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-xs">{herb.pinyinName || herb.name}</div>
+                    {herb.latinName && (
+                      <p className="text-[0.6rem] text-gray-500 italic">{herb.latinName}</p>
+                    )}
+                    {herb.function && (
+                      <p className="text-[0.6rem] text-gray-500">{herb.function}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-xs text-gray-500 mr-1">
+                      {Math.round(percentage)}%
+                    </span>
+                    <span className="font-semibold text-xs text-primary">
+                      {actualGrams}g
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+)}
+Y el código para la función que se ejecuta cuando agregas una fórmula a la prescripción, asegurándose de que se calculen correctamente las proporciones:
+
+// Función para agregar una fórmula a la prescripción con cálculo proporcional
+const handleAddFormulaToPrescription = (formula: FormulaWithHerbs, quantity: number = 100) => {
+  // Primero, calculamos el total de gramos de la fórmula original
+  const totalGrams = formula.totalGrams || 
+    formula.herbs.reduce((sum, herb) => sum + (herb.grams || 0), 0);
+  
+  // Creamos una copia de la fórmula para no modificar la original
+  const formulaWithTotal: FormulaWithHerbs = {
+    ...formula,
+    totalGrams: totalGrams,
+    // Calculamos los gramos proporcionales de cada hierba según la cantidad elegida
+    herbs: formula.herbs.map(herb => {
+      if (herb.grams) {
+        const percentage = (herb.grams / totalGrams) * 100;
+        const proportionalGrams = Math.round((percentage * quantity / 100) * 10) / 10;
+        
+        return {
+          ...herb,
+          grams: proportionalGrams
+        };
+      }
+      return herb;
+    })
+  };
+  
+  // Agregamos la fórmula a la prescripción
+  setPrescription(prev => ({
+    ...prev,
+    items: [
+      ...prev.items,
+      {
+        id: Date.now(),
+        type: 'formula',
+        quantity: quantity, // Cantidad total de la fórmula
+        formula: formulaWithTotal // Fórmula con los gramos calculados proporcionalmente
+      }
+    ]
+  }));
+};
+Para la visualización en la vista previa y PDF, debes asegurarte de que el componente PrintablePrescription.tsx tenga este código similar:
+
+// PrintablePrescription.tsx (parte que renderiza las fórmulas en el PDF)
+{item.type === 'formula' && item.formula && (
+  <>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Circle className="h-2 w-2 mr-2 text-yellow-500 fill-yellow-50/50" />
+        <p className="font-semibold text-gray-800">{item.formula.name}</p>
+        <span className="ml-2 font-semibold text-gray-700">
+          {item.quantity}g
+        </span>
+      </div>
+    </div>
+    <div className="ml-4 pl-2 border-l border-gray-100">
+      <div className="space-y-1 mt-1">
+        {item.formula.herbs.map((herb, index) => {
+          // El cálculo ya se habrá hecho al agregar la fórmula, pero si queremos
+          // asegurar que la visualización sea correcta, podemos recalcular aquí:
+          const formulaTotal = item.formula!.totalGrams || 
+            item.formula!.herbs.reduce((sum, h) => sum + (h.grams || 0), 0);
+          const percentage = herb.grams ? (herb.grams / formulaTotal) * 100 : 0;
+          
+          return (
+            <div key={herb.id} className="flex items-center border-b border-gray-50 pb-1 last:border-0 last:pb-0">
+              <div className="h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
+                <span className="text-[0.6rem]">{index + 1}</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div className="font-medium text-xs">{herb.pinyinName || herb.name}</div>
+                  <div className="ml-2 font-semibold text-xs text-primary">
+                    {herb.grams}g
+                  </div>
+                </div>
+                {herb.latinName && (
+                  <p className="text-[0.6rem] text-gray-500 italic">{herb.latinName}</p>
+                )}
+                {herb.function && (
+                  <p className="text-[0.6rem] text-gray-500">{herb.function}</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </>
+)}
+Estos tres fragmentos de código son los esenciales para asegurar que, cuando añadas una fórmula a la prescripción, se muestren correctamente todas las hierbas que la componen con sus porcentajes y gramos proporcionales a la cantidad total elegida.

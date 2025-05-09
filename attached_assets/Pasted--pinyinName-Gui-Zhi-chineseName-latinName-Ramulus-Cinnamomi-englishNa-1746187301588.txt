@@ -1,0 +1,117 @@
+{
+  "pinyinName": "Gui Zhi",
+  "chineseName": "桂枝",
+  "latinName": "Ramulus Cinnamomi",
+  "englishName": "",
+  "category": "Wind-cold releasing herbs",
+  "nature": "warm",
+  "flavor": "Acrid, sweet",
+  "meridians": ["HT", "LU", "UB"],
+  "dosage": "",
+  "preparation": "",
+  "functions": [
+    "Releases the exterior through diaphoresis",
+    "Warms and opens the channels and collaterals",
+    "Warms yang to eliminate water or phlegm stagnation",
+    "Warms yang in the chest",
+    "Warms yang in the Chong and Ren channels to restore normal menstruation"
+  ],
+  "applications": "",
+  "contraindications": "Febrile disorders, yang excess related to yin deficiency, heat in the blood, heat-dominant disorders",
+  "properties": "",
+  "secondaryActions": [
+    {
+      "primaryFunction": "Releases the exterior through diaphoresis",
+      "action": "Exterior-excess, wind-cold condition",
+      "tertiaryActions": [
+        {
+          "description": "Exterior-excess, wind-cold condition in the absence of perspiration",
+          "combinations": [
+            {
+              "herbs": ["MA HUANG"],
+              "formula": "MA HUANG TANG"
+            }
+          ]
+        },
+        {
+          "description": "Wind-cold, exterior-deficient conditions with perspiration and aversion to wind",
+          "combinations": [
+            {
+              "herbs": ["BAI SHAO"],
+              "formula": "GUI ZHI TANG"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Warms and opens the channels and collaterals",
+      "action": "Bi Zheng (painful obstruction syndrome)",
+      "tertiaryActions": [
+        {
+          "description": "Bi Zheng",
+          "combinations": [{"herbs": ["CHUAN WU CAO WU"]}]
+        },
+        {
+          "description": "Bi Zheng in the upper body, especially the shoulders",
+          "combinations": [{"herbs": ["JIANG HUANG", "FANG FENG"]}]
+        },
+        {
+          "description": "Rheumatoid arthritis",
+          "combinations": [{"herbs": ["QIANG HUO", "DU HUO", "FANG FENG", "WEI LING XIAN"]}]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Warms yang to eliminate water or phlegm stagnation",
+      "action": "Edema and dysuria",
+      "tertiaryActions": [
+        {
+          "description": "Edema and dysuria due to yang deficiency",
+          "combinations": [{"herbs": ["FU LING", "ZHU LING", "ZE XIE", "BAI ZHU"], "formula": "WU LING SAN"}]
+        },
+        {
+          "description": "Phlegm accumulation with fullness in the chest and hypochondrium, dizziness, vertigo and palpitations",
+          "combinations": [{"herbs": ["FU LING", "BAI ZHU", "GAN CAO"], "formula": "LING GUI ZHU GAN TANG"}]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Warms yang in the chest",
+      "action": "Xiong Bi (painful obstruction of the chest)",
+      "tertiaryActions": [
+        {
+          "description": "Xiong Bi due to yang deficiency",
+          "combinations": [{"herbs": ["GUA LOU SHI", "XIE BAI"]}]
+        },
+        {
+          "description": "Palpitations and intermittent pulse because of Heart yin and yang deficiencies",
+          "combinations": [{"herbs": ["ZHI GAN CAO", "REN SHEN", "E JIAO"], "formula": "ZHI GAN CAO TANG"}]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Warms yang in the Chong and Ren channels to restore normal menstruation",
+      "action": "Irregular menstruation due to yang deficiency and cold stagnation",
+      "tertiaryActions": [
+        {
+          "description": "Blood stagnation and masses in the lower abdomen",
+          "combinations": [{"herbs": ["MU DAN PI", "TAO REN"], "formula": "GUI ZHI FU LING WAN"}]
+        }
+      ]
+    }
+  ],
+  "commonCombinations": null,
+  "pharmacologicalEffects": [
+    "Antibiotic",
+    "Diuretic",
+    "Diaphoretic and antipyretic",
+    "Analgesic",
+    "Circulatory",
+    "Cardiotonic",
+    "Sedative and hypnotic",
+    "Antitussive"
+  ],
+  "laboratoryEffects": [],
+  "herbDrugInteractions": ["Diuretics"]
+}

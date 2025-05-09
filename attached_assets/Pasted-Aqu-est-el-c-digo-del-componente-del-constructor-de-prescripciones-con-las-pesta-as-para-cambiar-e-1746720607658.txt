@@ -1,0 +1,457 @@
+Aquí está el código del componente del constructor de prescripciones con las pestañas para cambiar entre los datos del paciente y el contenido de la prescripción:
+
+import { useState } from 'react';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { PlusCircle, Circle } from 'lucide-react';
+import { PrescriptionData, PrescriptionItem, Herb, FormulaWithHerbs } from '@/shared/schema';
+interface PrescriptionBuilderProps {
+  prescription: PrescriptionData;
+  onUpdateInfo: (field: string, value: string) => void;
+  onUpdateQuantity: (index: number, quantity: number) => void;
+  onRemoveItem: (index: number) => void;
+  onClear: () => void;
+  onUpdateMedicalCondition?: (condition: string, value: boolean) => void;
+  onAddItem?: (item: PrescriptionItem) => void;
+}
+export default function PrescriptionBuilder({
+  prescription,
+  onUpdateInfo,
+  onUpdateQuantity,
+  onRemoveItem,
+  onClear,
+  onUpdateMedicalCondition,
+  onAddItem
+}: PrescriptionBuilderProps) {
+  const [customItemName, setCustomItemName] = useState('');
+  const [customItemQuantity, setCustomItemQuantity] = useState<number | undefined>();
+  const handleAddCustomItem = () => {
+    if (!customItemName || !customItemQuantity || customItemQuantity <= 0) return;
+    const newItem: PrescriptionItem = {
+      id: Date.now(),
+      type: 'herb',
+      quantity: customItemQuantity,
+      herb: {
+        id: -Date.now(), // ID negativo para indicar que es personalizado
+        name: customItemName,
+        pinyinName: customItemName,
+      } as Herb
+    };
+    onAddItem?.(newItem);
+    setCustomItemName('');
+    setCustomItemQuantity(undefined);
+  };
+  // Comprobar si una hierba o fórmula está contraindicada por la condición médica del paciente
+  const checkContraindications = (item: PrescriptionItem) => {
+    const conditions = [];
+    const contraindications = item.type === 'herb' 
+      ? item.herb?.contraindications || ''
+      : item.formula?.contraindications || '';
+    
+    // Si no hay contraindicaciones o no hay condiciones médicas, retornar vacío
+    if (!contraindications || !prescription.medicalConditions) return [];
+    
+    // Comprobar cada condición médica
+    if (prescription.medicalConditions.pregnancy && 
+        contraindications.toLowerCase().includes('embarazo')) {
+      conditions.push('No usar durante el embarazo');
+    }
+    
+    if (prescription.medicalConditions.breastfeeding && 
+        contraindications.toLowerCase().includes('lactancia')) {
+      conditions.push('No usar durante la lactancia');
+    }
+    
+    if (prescription.medicalConditions.hypertension && 
+        contraindications.toLowerCase().includes('hipertensión')) {
+      conditions.push('Contraindicado en hipertensión');
+    }
+    
+    if (prescription.medicalConditions.liverDisease && 
+        (contraindications.toLowerCase().includes('hígado') || 
+         contraindications.toLowerCase().includes('hepát'))) {
+      conditions.push('Contraindicado en enfermedad hepática');
+    }
+    
+    if (prescription.medicalConditions.allergies && 
+        contraindications.toLowerCase().includes('alergia')) {
+      conditions.push('Precaución en caso de alergias');
+    }
+    
+    return conditions;
+  };
+  
+  return (
+    <div className="w-full md:w-2/3">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-xl">Constructor de Prescripción</CardTitle>
+          <Button 
+            variant="destructive"
+            size="sm"
+            onClick={onClear}
+            className="h-8 px-2 text-xs"
+            disabled={prescription.items.length === 0}
+          >
+            Limpiar Prescripción
+          </Button>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs defaultValue="prescripcion" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="paciente">Datos del Paciente</TabsTrigger>
+              <TabsTrigger value="prescripcion">Contenido de Prescripción</TabsTrigger>
+            </TabsList>
+            
+            {/* Tab: Datos del Paciente */}
+            <TabsContent value="paciente" className="space-y-4">
+              <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                <div>
+                  <Label htmlFor="prescription-date" className="block text-sm font-medium mb-1">Fecha</Label>
+                  <Input
+                    id="prescription-date"
+                    type="date"
+                    value={prescription.date}
+                    onChange={(e) => onUpdateInfo('date', e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="prescription-number" className="block text-sm font-medium mb-1">Número de Prescripción</Label>
+                  <Input
+                    id="prescription-number"
+                    type="text"
+                    value={prescription.number}
+                    onChange={(e) => onUpdateInfo('number', e.target.value)}
+                    placeholder="MCH-2023-001"
+                    className="w-full"
+                  />
+                </div>
+              </div>
+              
+              {/* Patient Information */}
+              <div className="border rounded-md p-4 bg-gray-50">
+                <h3 className="text-sm font-semibold mb-3 text-gray-700">Datos del Paciente</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="patient-name" className="block text-sm font-medium mb-1">Nombre del Paciente</Label>
+                    <Input
+                      id="patient-name"
+                      type="text"
+                      value={prescription.patientName}
+                      onChange={(e) => onUpdateInfo('patientName', e.target.value)}
+                      placeholder="Nombre completo"
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="patient-phone" className="block text-sm font-medium mb-1">Teléfono</Label>
+                    <Input
+                      id="patient-phone"
+                      type="tel"
+                      value={prescription.patientPhone}
+                      onChange={(e) => onUpdateInfo('patientPhone', e.target.value)}
+                      placeholder="Número de teléfono"
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="patient-email" className="block text-sm font-medium mb-1">Email</Label>
+                    <Input
+                      id="patient-email"
+                      type="email"
+                      value={prescription.patientEmail}
+                      onChange={(e) => onUpdateInfo('patientEmail', e.target.value)}
+                      placeholder="Correo electrónico"
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="patient-address" className="block text-sm font-medium mb-1">Dirección</Label>
+                    <Input
+                      id="patient-address"
+                      type="text"
+                      value={prescription.patientAddress}
+                      onChange={(e) => onUpdateInfo('patientAddress', e.target.value)}
+                      placeholder="Dirección completa"
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+                
+                {/* Medical Conditions */}
+                <div className="mt-4 border-t pt-4">
+                  <h4 className="text-sm font-medium mb-3">Condiciones Médicas</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="condition-pregnancy"
+                        checked={prescription.medicalConditions.pregnancy}
+                        onChange={(e) => onUpdateMedicalCondition?.('pregnancy', e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor="condition-pregnancy" className="text-sm">Embarazo</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="condition-breastfeeding"
+                        checked={prescription.medicalConditions.breastfeeding}
+                        onChange={(e) => onUpdateMedicalCondition?.('breastfeeding', e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor="condition-breastfeeding" className="text-sm">Lactancia</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="condition-hypertension"
+                        checked={prescription.medicalConditions.hypertension}
+                        onChange={(e) => onUpdateMedicalCondition?.('hypertension', e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor="condition-hypertension" className="text-sm">Hipertensión</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="condition-liverDisease"
+                        checked={prescription.medicalConditions.liverDisease}
+                        onChange={(e) => onUpdateMedicalCondition?.('liverDisease', e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor="condition-liverDisease" className="text-sm">Enfermedad Hepática</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="condition-allergies"
+                        checked={prescription.medicalConditions.allergies}
+                        onChange={(e) => onUpdateMedicalCondition?.('allergies', e.target.checked)}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor="condition-allergies" className="text-sm">Alergias</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            {/* Tab: Contenido de la Prescripción */}
+            <TabsContent value="prescripcion" className="space-y-4 pt-2">
+              <div className="mb-4">
+                <Label htmlFor="prescription-notes" className="block text-sm font-medium mb-1">Notas de prescripción</Label>
+                <Textarea
+                  id="prescription-notes"
+                  value={prescription.notes}
+                  onChange={(e) => onUpdateInfo('notes', e.target.value)}
+                  placeholder="Instrucciones especiales..."
+                  className="w-full resize-none"
+                  rows={2}
+                />
+              </div>
+              
+              {/* Prescription Items */}
+              <div className="border-t border-gray-200 pt-4 mb-6">
+                <h3 className="font-medium mb-3">Contenido de la Prescripción</h3>
+                
+                {/* Empty state */}
+                {prescription.items.length === 0 && (
+                  <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-10 w-10 mx-auto mb-2 text-gray-400" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <p className="text-gray-500">Añade hierbas o fórmulas desde la biblioteca</p>
+                  </div>
+                )}
+                
+                {/* Prescription list */}
+                <div className="space-y-3">
+                  {prescription.items.map((item, index) => {
+                    // Verificar contraindicaciones
+                    const contraindications = checkContraindications(item);
+                    
+                    return (
+                      <div key={`${item.type}-${item.id}-${index}`} className={`p-3 rounded-md relative ${contraindications.length > 0 ? 'bg-red-50 border border-red-200' : 'bg-gray-100'}`}>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <Circle className={`h-3 w-3 mr-2 ${item.type === 'formula' 
+                              ? 'text-yellow-500 fill-yellow-50/50' 
+                              : 'text-primary fill-primary/10'
+                            }`} />
+                            <div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium">
+                                    {item.type === 'formula' 
+                                      ? item.formula?.name 
+                                      : (item.herb?.pinyinName || item.herb?.name)}
+                                  </p>
+                                  <div className="flex items-center bg-gray-50 rounded px-1 border border-gray-200 min-w-[85px]">
+                                    <Input
+                                      type="number"
+                                      min="1"
+                                      value={item.quantity}
+                                      onChange={(e) => onUpdateQuantity(index, parseInt(e.target.value) || 1)}
+                                      className="w-20 h-6 text-center font-medium bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    />
+                                    <span className="text-gray-700 font-medium mr-1">g</span>
+                                  </div>
+                                </div>
+                                {item.type === 'herb' && item.herb?.latinName && (
+                                  <p className="text-xs text-gray-500 italic">{item.herb.latinName}</p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex-none">
+                            <button 
+                              onClick={() => onRemoveItem(index)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* Mostrar advertencias de contraindicaciones */}
+                        {contraindications.length > 0 && (
+                          <div className="mt-2 mb-1 bg-red-100 border-l-4 border-red-500 p-2 rounded">
+                            <div className="flex items-start">
+                              <svg className="h-5 w-5 text-red-600 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                              </svg>
+                              <div>
+                                <p className="text-sm font-medium text-red-700">¡Contraindicación detectada!</p>
+                                <ul className="text-xs text-red-600 mt-1 list-disc ml-4">
+                                  {contraindications.map((condition, idx) => (
+                                    <li key={idx}>{condition}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Show formula herbs indented */}
+                        {item.type === 'formula' && item.formula?.herbs && (
+                          <div className="ml-7 mt-2 pl-3 border-l-2 border-gray-300">
+                            <div className="space-y-1">
+                              {item.formula.herbs.map((herb, idx) => (
+                                <div key={herb.id} className="flex items-center border-b border-gray-200 pb-1 last:border-0 last:pb-0">
+                                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
+                                    <span className="text-xs">{idx + 1}</span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center">
+                                      <div className="font-medium text-sm">{herb.pinyinName || herb.name}</div>
+                                      <div className="ml-2 font-semibold text-xs text-primary">
+                                        {herb.grams && `${herb.grams}g`}
+                                        {herb.dosage && <span className="ml-1 text-gray-500">({herb.dosage})</span>}
+                                      </div>
+                                    </div>
+                                    {herb.latinName && (
+                                      <p className="text-xs text-gray-500 italic">{herb.latinName}</p>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {/* Añadir hierba personalizada */}
+                <div className="mt-6 border-t border-gray-200 pt-4">
+                  <h3 className="font-medium mb-3">Añadir hierba personalizada</h3>
+                  <div className="flex items-end gap-3">
+                    <div className="flex-1">
+                      <Label htmlFor="custom-name">Nombre</Label>
+                      <Input 
+                        id="custom-name" 
+                        placeholder="Nombre de la hierba..." 
+                        className="mt-1"
+                        value={customItemName}
+                        onChange={(e) => setCustomItemName(e.target.value)}
+                      />
+                    </div>
+                    <div className="w-32">
+                      <Label htmlFor="custom-quantity">Cantidad (g)</Label>
+                      <Input 
+                        id="custom-quantity" 
+                        type="number" 
+                        placeholder="Cantidad" 
+                        min="1"
+                        className="mt-1" 
+                        value={customItemQuantity === undefined ? '' : customItemQuantity}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setCustomItemQuantity(value === '' ? undefined : parseInt(value) || 0);
+                        }}
+                      />
+                    </div>
+                    <Button 
+                      type="button" 
+                      className="mb-px mt-6"
+                      onClick={handleAddCustomItem}
+                      disabled={!customItemName || !customItemQuantity || customItemQuantity <= 0}
+                    >
+                      <PlusCircle className="h-4 w-4 mr-1" />
+                      Añadir
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+Este componente implementa:
+
+Un sistema de pestañas para alternar entre:
+
+"Datos del Paciente" - Con información del paciente y condiciones médicas
+"Contenido de Prescripción" - Con las hierbas y fórmulas añadidas
+Funcionalidad para:
+
+Mostrar/editar datos del paciente
+Marcar condiciones médicas (embarazo, lactancia, hipertensión, etc.)
+Ver/editar las hierbas y fórmulas añadidas
+Añadir hierbas personalizadas
+Ver los componentes de cada fórmula con sus cantidades proporcionales
+Detectar contraindicaciones basadas en las condiciones médicas
+Visualización:
+
+Nombres en pinyin y latín para las hierbas
+Advertencias de contraindicaciones destacadas visualmente
+Interfaz intuitiva para modificar cantidades
+Listado indentado de componentes de fórmulas
+Este código mantiene exactamente el mismo estilo visual y funcionalidad que tienes actualmente en tu aplicación.

@@ -1,0 +1,298 @@
+Código para Manejo de Fórmulas con sus Componentes en la Prescripción
+Aquí te comparto el código específico para asegurar que al agregar una fórmula a la prescripción se muestren correctamente sus componentes con porcentajes y gramajes, y que al usar la opción de "añadir hierbas individuales" se mantenga la proporción correcta:
+
+1. Componente para Mostrar Fórmulas en la Prescripción
+// PrescriptionBuilder.tsx (fragmento de la parte que muestra las fórmulas)
+{item.type === 'formula' && item.formula && (
+  <div className="px-3 py-2 border-l-2 border-l-yellow-500">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Circle className="h-2 w-2 mr-2 text-yellow-500 fill-yellow-50/50" />
+        <p className="font-semibold text-gray-800">{item.formula.name}</p>
+        <span className="ml-2 font-semibold text-gray-700">
+          {item.quantity}g
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onRemoveItem(index)}
+          className="h-7 w-7 p-0"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+    <div className="ml-4 pl-2 border-l border-gray-100">
+      <div className="space-y-1 mt-1">
+        {item.formula.herbs.map((herb, i) => {
+          // Calcular la cantidad proporcional de cada hierba
+          // basada en el total de la fórmula seleccionada
+          const percentage = herb.grams ? (herb.grams / item.formula!.totalGrams!) * 100 : 0;
+          const actualGrams = Math.round((percentage * item.quantity / 100) * 10) / 10;
+          
+          return (
+            <div key={`${herb.id}-${i}`} className="flex items-center border-b border-gray-50 pb-1 last:border-0 last:pb-0">
+              <div className="h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
+                <span className="text-[0.6rem]">{i + 1}</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-xs">{herb.pinyinName || herb.name}</div>
+                    {herb.latinName && (
+                      <p className="text-[0.6rem] text-gray-500 italic">{herb.latinName}</p>
+                    )}
+                  </div>
+                  <div className="ml-2 font-semibold text-xs text-primary">
+                    {actualGrams}g
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+)}
+2. Función para Calcular el Total de Gramos de una Fórmula
+// Este código debe estar en una función de utilidad o en el componente donde procesas las fórmulas
+// Calcula el total de gramos para una fórmula (puedes ponerlo en utils.ts)
+export function calculateFormulaTotal(formula: FormulaWithHerbs): number {
+  // Si ya tiene un totalGrams definido, lo usamos
+  if (formula.totalGrams && formula.totalGrams > 0) {
+    return formula.totalGrams;
+  }
+  
+  // Sino, calculamos la suma de los gramos de todas las hierbas
+  return formula.herbs.reduce((total, herb) => {
+    return total + (herb.grams || 0);
+  }, 0);
+}
+3. Función para Añadir Fórmula a la Prescripción
+// Esta función debe estar en tu componente principal donde manejas la prescripción
+const handleAddFormulaToPrescription = (formula: FormulaWithHerbs, quantity: number = 100) => {
+  // Nos aseguramos que la fórmula tenga un totalGrams calculado
+  const formulaCopy = { 
+    ...formula,
+    totalGrams: calculateFormulaTotal(formula)
+  };
+  
+  // Actualizamos los gramos de cada hierba según la proporción
+  const herbsWithCalculatedGrams = formulaCopy.herbs.map(herb => {
+    // Si la hierba tiene gramos, calculamos la proporción
+    if (herb.grams) {
+      const percentage = (herb.grams / formulaCopy.totalGrams!) * 100;
+      const proportionalGrams = Math.round((percentage * quantity / 100) * 10) / 10;
+      return {
+        ...herb,
+        grams: proportionalGrams
+      };
+    }
+    return herb;
+  });
+  
+  // Añadimos la fórmula con las hierbas actualizadas
+  setPrescription(prev => ({
+    ...prev,
+    items: [
+      ...prev.items,
+      {
+        id: Date.now(),
+        type: 'formula',
+        quantity: quantity,
+        formula: {
+          ...formulaCopy,
+          herbs: herbsWithCalculatedGrams
+        }
+      }
+    ]
+  }));
+};
+4. Función para Añadir Hierbas Individuales de una Fórmula
+// Esta función debe estar en tu componente principal donde manejas la prescripción
+const handleAddFormulaHerbsIndividually = (formula: FormulaWithHerbs, quantity: number = 100) => {
+  // Calculamos el total de la fórmula para las proporciones
+  const totalGrams = calculateFormulaTotal(formula);
+  
+  // Creamos items individuales para cada hierba
+  const herbItems = formula.herbs.map(herb => {
+    // Calculamos la proporción de la hierba en la fórmula
+    const percentage = herb.grams ? (herb.grams / totalGrams) * 100 : 0;
+    // Aplicamos la proporción a la cantidad elegida
+    const proportionalGrams = Math.round((percentage * quantity / 100) * 10) / 10;
+    
+    return {
+      id: Date.now() + Math.random(), // ID único
+      type: 'herb',
+      quantity: proportionalGrams,
+      herb: {
+        ...herb,
+        // Añadimos el campo function para mantener la información de su función en la fórmula
+        function: herb.function || ''
+      }
+    };
+  });
+  
+  // Añadimos todas las hierbas a la prescripción
+  setPrescription(prev => ({
+    ...prev,
+    items: [
+      ...prev.items,
+      ...herbItems
+    ]
+  }));
+};
+5. Componente para Seleccionar Cantidad al Añadir una Fórmula
+// LibraryPanel.tsx (fragmento donde se muestra el botón de añadir fórmula)
+const [selectedFormula, setSelectedFormula] = useState<FormulaWithHerbs | null>(null);
+const [isQuantityDialogOpen, setIsQuantityDialogOpen] = useState(false);
+const [dialogAction, setDialogAction] = useState<'addFormula' | 'addHerbsIndividually'>('addFormula');
+// Función para manejar el click en el botón de añadir fórmula
+const handleAddFormulaWithQuantity = (formula: FormulaWithHerbs) => {
+  setSelectedFormula(formula);
+  setDialogAction('addFormula');
+  setIsQuantityDialogOpen(true);
+};
+// Función para manejar el click en añadir hierbas individualmente
+const handleAddFormulaHerbsIndividuallyWithQuantity = (formula: FormulaWithHerbs) => {
+  setSelectedFormula(formula);
+  setDialogAction('addHerbsIndividually');
+  setIsQuantityDialogOpen(true);
+};
+// Función que se llama cuando se confirma la cantidad
+const handleConfirmQuantity = (quantity: number) => {
+  if (selectedFormula) {
+    if (dialogAction === 'addFormula') {
+      onAddFormulaToPrescription(selectedFormula, quantity);
+    } else {
+      onAddFormulaHerbsIndividually(selectedFormula, quantity);
+    }
+  }
+  setIsQuantityDialogOpen(false);
+};
+// Renderiza el diálogo de cantidad
+return (
+  <>
+    {/* Resto del componente... */}
+    
+    {/* Botones en la tarjeta de fórmula */}
+    <div className="flex gap-1 mt-2">
+      <Button 
+        size="sm" 
+        variant="outline" 
+        onClick={() => handleAddFormulaWithQuantity(formula)}
+        className="text-xs"
+      >
+        Añadir Fórmula
+      </Button>
+      
+      <Button 
+        size="sm" 
+        variant="ghost" 
+        onClick={() => handleAddFormulaHerbsIndividuallyWithQuantity(formula)}
+        className="text-xs"
+      >
+        Añadir Hierbas
+      </Button>
+    </div>
+    
+    {/* Diálogo para seleccionar cantidad */}
+    <QuantitySelectDialog
+      open={isQuantityDialogOpen && selectedFormula !== null}
+      onOpenChange={setIsQuantityDialogOpen}
+      title={dialogAction === 'addFormula' ? 'Añadir Fórmula' : 'Añadir Hierbas Individuales'}
+      description={dialogAction === 'addFormula' 
+        ? `Indica la cantidad en gramos para ${selectedFormula?.name || ''}` 
+        : `Indica la cantidad en gramos para calcular las proporciones de ${selectedFormula?.name || ''}`}
+      initialQuantity={100}
+      onConfirm={handleConfirmQuantity}
+    />
+  </>
+);
+Componente QuantitySelectDialog para Seleccionar Cantidades
+// QuantitySelectDialog.tsx
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+interface QuantitySelectDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: string;
+  initialQuantity: number;
+  onConfirm: (quantity: number) => void;
+}
+export default function QuantitySelectDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  initialQuantity,
+  onConfirm
+}: QuantitySelectDialogProps) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setQuantity(isNaN(value) ? 0 : value);
+  };
+  const handleConfirm = () => {
+    onConfirm(quantity);
+    setQuantity(initialQuantity); // Reset quantity
+  };
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="quantity" className="text-right">
+              Cantidad
+            </Label>
+            <Input
+              id="quantity"
+              type="number"
+              min="0"
+              step="0.1"
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="col-span-3"
+              autoFocus
+            />
+          </div>
+          <div className="text-xs text-gray-500 col-start-2 col-span-3">
+            <p>Gramos totales a preparar</p>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
+          </Button>
+          <Button type="button" onClick={handleConfirm}>
+            Confirmar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+Con estos componentes y funciones, podrás:
+
+Visualizar correctamente las fórmulas con sus componentes y gramajes en la prescripción
+Calcular proporcionalmente los gramos de cada hierba según la cantidad elegida
+Añadir las hierbas individualmente manteniendo las proporciones correctas
+Estos son los elementos clave que necesitas implementar para asegurar que el sistema de cálculo de proporciones funcione correctamente en tu nueva aplicación.

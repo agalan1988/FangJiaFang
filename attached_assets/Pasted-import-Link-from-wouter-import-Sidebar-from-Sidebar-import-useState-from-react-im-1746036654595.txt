@@ -1,0 +1,54 @@
+import { Link } from "wouter";
+import Sidebar from "./Sidebar";
+import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { X, Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="sticky top-0 z-10 border-b bg-background h-16 flex items-center px-4 md:px-6">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-2">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
+            <Link href="/" className="font-bold text-xl flex items-center">
+              <span className="text-primary">Medicina China</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1">
+        {isMobile ? (
+          sidebarOpen && (
+            <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
+              <div className="fixed inset-y-0 left-0 z-50 w-72 bg-background border-r">
+                <div className="flex h-16 items-center justify-between px-4">
+                  <Link href="/" className="font-bold text-xl">
+                    <span className="text-primary">Medicina China</span>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <Sidebar onClose={() => setSide

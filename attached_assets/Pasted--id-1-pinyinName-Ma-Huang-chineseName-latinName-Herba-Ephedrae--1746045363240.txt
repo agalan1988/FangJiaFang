@@ -1,0 +1,73 @@
+{
+  "id": 1,
+  "pinyinName": "Ma Huang",
+  "chineseName": "麻黄",
+  "latinName": "Herba Ephedrae",
+  "englishName": "Ephedra",
+  "category": "Exterior-Releasing Herbs",
+  "nature": "Warm",
+  "flavor": "Acrid, Slightly Bitter",
+  "meridians": ["Lung", "Bladder"],
+  "dosage": "3-9g",
+  "preparation": "Decoction, usually combined with other herbs",
+  "contraindications": "Contraindicated in cases with deficiency heat or yin deficiency, hypertension, heart disease, diabetes, and hyperthyroidism.",
+  "functions": [
+    "Induce sweating and disperse cold",
+    "Relieve wheezing and calm asthma",
+    "Promote urination and reduce edema"
+  ],
+  "secondaryActions": [
+    {
+      "primaryFunction": "Induce sweating and disperse cold",
+      "action": "Release exterior with warm properties",
+      "combinations": [
+        {
+          "herbs": ["Individually"]
+        },
+        {
+          "herbs": ["Ma Huang", "Gui Zhi"],
+          "formula": "Ma Huang Tang"
+        },
+        {
+          "herbs": ["Ma Huang", "Xing Ren", "Shi Gao"]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Relieve wheezing and calm asthma",
+      "action": "Open Lung qi and stop wheezing",
+      "tertiaryActions": [
+        {
+          "description": "For cold-type asthma",
+          "combinations": [
+            {
+              "herbs": ["Ma Huang", "Xi Xin", "Xing Ren"],
+              "formula": "Xiao Qing Long Tang"
+            }
+          ]
+        },
+        {
+          "description": "For heat-type asthma",
+          "combinations": [
+            {
+              "herbs": ["Ma Huang", "Shi Gao", "Xing Ren"],
+              "formula": "Ma Xing Shi Gan Tang"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Promote urination and reduce edema",
+      "action": "Strengthen water metabolism",
+      "combinations": [
+        {
+          "herbs": ["Individually"]
+        },
+        {
+          "herbs": ["Ma Huang", "Zhu Ling", "Bai Zhu"]
+        }
+      ]
+    }
+  ]
+}

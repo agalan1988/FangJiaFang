@@ -1,0 +1,88 @@
+import { pgTable, serial, text, timestamp, integer, boolean, pgEnum } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import * as z from 'zod';
+
+// Definición de tablas
+export const herbs = pgTable("herbs", {
+  id: serial("id").primaryKey(),
+  pinyinName: text("pinyin_name").notNull(),
+  chineseName: text("chinese_name").notNull(),
+  latinName: text("latin_name"),
+  englishName: text("english_name"),
+  category: text("category"),
+  nature: text("nature"),
+  flavor: text("flavor"),
+  meridians: text("meridians").array(),
+  dosage: text("dosage"),
+  functions: text("functions").array(),
+  applications: text("applications"),
+  contraindications: text("contraindications"),
+  properties: text("properties"),
+  secondaryActions: json("secondary_actions"),
+  commonCombinations: json("common_combinations")
+});
+
+export const formulas = pgTable("formulas", {
+  id: serial("id").primaryKey(),
+  pinyinName: text("pinyin_name").notNull(),
+  chineseName: text("chinese_name").notNull(),
+  englishName: text("english_name"),
+  category: text("category"),
+  actions: text("actions").array(),
+  indications: text("indications"),
+  contraindications: text("contraindications"),
+  composition: json("composition")
+});
+
+export const patients = pgTable("patients", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  identifier: text("identifier"),
+  dateOfBirth: text("date_of_birth"),
+  gender: text("gender"),
+  contactInfo: text("contact_info"),
+  medicalHistory: text("medical_history")
+});
+
+export const prescriptions = pgTable("prescriptions", {
+  id: serial("id").primaryKey(),
+  patientId: integer("patient_id").notNull(),
+  formulaId: integer("formula_id"),
+  customFormula: json("custom_formula"),
+  dateCreated: timestamp("date_created").defaultNow(),
+  status: text("status"),
+  instructions: text("instructions"),
+  duration: text("duration"),
+  notes: text("notes")
+});
+
+// Esquemas Zod para validación
+export const insertHerbSchema = createInsertSchema(herbs).omit({
+  id: true,
+});
+
+export const insertFormulaSchema = createInsertSchema(formulas).omit({
+  id: true,
+});
+
+export const insertPatientSchema = createInsertSchema(patients).omit({
+  id: true,
+});
+
+export const insertPrescriptionSchema = createInsertSchema(prescriptions).omit({
+  id: true,
+  dateCreated: true,
+});
+
+// Tipos para TypeScript
+export type Herb = typeof herbs.$inferSelect;
+export type InsertHerb = z.infer<typeof insertHerbSchema>;
+
+export type Formula = typeof formulas.$inferSelect;
+export type InsertFormula = z.infer<typeof insertFormulaSchema>;
+
+export type Patient = typeof patients.$inferSelect;
+export type InsertPatient = z.infer<typeof insertPatientSchema>;
+
+export type Prescription = typeof prescriptions.$inferSelect;
+export type InsertPrescription = z.infer<typeof insertPrescriptionSchema>;

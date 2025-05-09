@@ -1,0 +1,127 @@
+import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Leaf, FlaskRound, Users, FileText } from "lucide-react";
+import Layout from "@/components/Layout";
+
+export default function Dashboard() {
+  const { data: herbs } = useQuery({
+    queryKey: ["/api/herbs"],
+  });
+
+  const { data: formulas } = useQuery({
+    queryKey: ["/api/formulas"],
+  });
+
+  const { data: patients } = useQuery({
+    queryKey: ["/api/patients"],
+  });
+
+  const { data: prescriptions } = useQuery({
+    queryKey: ["/api/prescriptions"],
+  });
+
+  const { data: activities } = useQuery({
+    queryKey: ["/api/activities"],
+  });
+
+  return (
+    <Layout>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Bienvenido al sistema de gestión de Medicina Tradicional China
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Link href="/herbs">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center">
+                <Leaf className="h-4 w-4 mr-2 text-primary" />
+                Hierbas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{herbs?.length || 0}</p>
+              <CardDescription>Hierbas registradas</CardDescription>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/formulas">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center">
+                <FlaskRound className="h-4 w-4 mr-2 text-primary" />
+                Fórmulas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{formulas?.length || 0}</p>
+              <CardDescription>Fórmulas registradas</CardDescription>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/patients">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center">
+                <Users className="h-4 w-4 mr-2 text-primary" />
+                Pacientes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{patients?.length || 0}</p>
+              <CardDescription>Pacientes registrados</CardDescription>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/prescriptions">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium flex items-center">
+                <FileText className="h-4 w-4 mr-2 text-primary" />
+                Prescripciones
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{prescriptions?.length || 0}</p>
+              <CardDescription>Prescripciones creadas</CardDescription>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
+      {activities && activities.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Actividad Reciente</h2>
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-4">
+                {activities.map((activity) => (
+                  <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      {activity.type === "prescription" && <FileText className="h-5 w-5" />}
+                      {activity.type === "patient" && <Users className="h-5 w-5" />}
+                      {activity.type === "formula" && <FlaskRound className="h-5 w-5" />}
+                      {activity.type === "herb" && <Leaf className="h-5 w-5" />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{activity.title}</p>
+                      <p className="text-sm text-muted-foreground">{activity.description}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{activity.timestamp}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </Layout>
+  );
+}

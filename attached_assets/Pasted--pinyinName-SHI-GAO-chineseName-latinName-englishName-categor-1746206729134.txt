@@ -1,0 +1,230 @@
+{
+  "pinyinName": "SHI GAO",
+  "chineseName": "",
+  "latinName": "",
+  "englishName": "",
+  "category": "Wind-cold releasing herbs",
+  "nature": "",
+  "flavor": "",
+  "meridians": [],
+  "dosage": "",
+  "preparation": "",
+  "functions": [
+    "Acrid, sweet, very cold, LU, ST",
+    "Clears heat, sedates fire, relieves irritability and quenches thirst",
+    "Excess heat in the qi (energy) level",
+    "Fire in the Lung and Stomach, at the qi level",
+    "Exterior wind-cold and interior heat",
+    "Clears Lung heat",
+    "Excess heat in the Lung",
+    "Heat and toxins in the Lung",
+    "Clears heat in the Stomach and Stomach channel",
+    "Stomach heat",
+    "Nausea and vomiting",
+    "Heat attacking the Stomach channel",
+    "Clears heat and promotes healing of sores, burns and eczema",
+    "Sores, burn and eczema",
+    "Pharmacoloigcal effects",
+    "Antipyretic, immunostimulant, effect on healing, facilitate the passage of bile, shorten coagulation time, promote siuresis, reduce spontaneuous intake of water (thirst)"
+  ],
+  "applications": "",
+  "contraindications": "",
+  "cautions": "",
+  "clinicalStudiesAndResearch": [],
+  "properties": "",
+  "secondaryActions": [
+    {
+      "primaryFunction": "Fire in the Lung and Stomach, at the qi level",
+      "action": "Fire in the Lung and Stomach, at the qi level",
+      "tertiaryActions": [
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "ZHI MU"
+              ],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Exterior wind-cold and interior heat",
+      "action": "Exterior wind-cold and interior heat",
+      "tertiaryActions": [
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "MA HUANG",
+                "GUI ZHI"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "MU DAN PI",
+                "SHENG DI HUANG",
+                "XUAN SHEN"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "REN SHEN"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "REN SHEN",
+                "MAI MEN DONG"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "HUANG LIAN",
+                "HUANG QIN",
+                "HUANG BAI"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "HUANG LIAN",
+                "ZHI ZI",
+                "MU DAN PI",
+                "CHI SHAO",
+                "ZHI MU"
+              ],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "QING WEN BAI DU YIN"
+              ],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Excess heat in the Lung",
+      "action": "Excess heat in the Lung",
+      "tertiaryActions": [
+        {
+          "description": "Wheezing and dyspnea from lung heat",
+          "combinations": [
+            {
+              "herbs": [
+                "MA HUANG",
+                "XING REN"
+              ],
+              "formula": "MA XING GAN SHI TANG"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Heat and toxins in the Lung",
+      "action": "Heat and toxins in the Lung",
+      "tertiaryActions": [
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "JIN YIN HUA",
+                "HUANG QIN",
+                "YU XING CAO"
+              ],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Nausea and vomiting",
+      "action": "Nausea and vomiting",
+      "tertiaryActions": [
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "BAN XIA",
+                "ZHU RU"
+              ],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Heat attacking the Stomach channel",
+      "action": "Heat attacking the Stomach channel",
+      "tertiaryActions": [
+        {
+          "description": "",
+          "combinations": [
+            {
+              "herbs": [
+                "SHENG DI HUANG",
+                "ZHI MU",
+                "NIU XI"
+              ],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Sores, burn and eczema",
+      "action": "Alone",
+      "tertiaryActions": []
+    }
+  ],
+  "commonCombinations": [],
+  "pharmacologicalEffects": [],
+  "laboratoryEffects": [],
+  "herbDrugInteractions": []
+}

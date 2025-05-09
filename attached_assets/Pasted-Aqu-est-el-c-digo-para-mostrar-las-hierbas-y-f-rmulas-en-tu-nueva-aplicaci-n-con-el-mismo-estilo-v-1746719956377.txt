@@ -1,0 +1,514 @@
+Aquí está el código para mostrar las hierbas y fórmulas en tu nueva aplicación con el mismo estilo visual que tienes aquí:
+
+1. Componente HerbCard.tsx
+import { useState } from 'react';
+import { Circle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Herb } from '@/shared/schema';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+interface HerbCardProps {
+  herb: Herb;
+  onAdd?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  showActions?: boolean;
+  compact?: boolean;
+}
+export default function HerbCard({ 
+  herb, 
+  onAdd, 
+  onEdit, 
+  onDelete, 
+  showActions = true,
+  compact = true
+}: HerbCardProps) {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  
+  // Función para obtener el color según la naturaleza de la hierba
+  const getNatureColor = (nature: string) => {
+    const natureMap: {[key: string]: string} = {
+      'Caliente': 'bg-red-500',
+      'Calor': 'bg-red-500',
+      'Tibia': 'bg-orange-400',
+      'Neutra': 'bg-yellow-300',
+      'Neutral': 'bg-yellow-300',
+      'Fresca': 'bg-blue-300',
+      'Fría': 'bg-blue-500',
+      'Frío': 'bg-blue-500'
+    };
+    
+    return natureMap[nature] || 'bg-gray-400';
+  };
+  
+  // Renderizar campos de texto en formato de área
+  const renderTextArea = (label: string, content?: string) => {
+    if (!content) return null;
+    return (
+      <div className="mb-4">
+        <h4 className="font-semibold text-sm mb-1 text-primary-700">{label}</h4>
+        <div className="p-3 bg-gray-50 rounded-md border border-gray-200 text-sm whitespace-pre-wrap">
+          {content}
+        </div>
+      </div>
+    );
+  };
+  
+  // Renderizar campo individual
+  const renderField = (label: string, value?: string) => {
+    if (!value) return null;
+    return (
+      <div className="mb-2" key={label}>
+        <span className="font-semibold text-primary-700">{label}: </span>
+        <span className="text-gray-700">{value}</span>
+      </div>
+    );
+  };
+  
+  // Datos básicos para la ficha
+  const basicFields = [
+    { label: 'Nombre en Chino', value: herb.chineseName },
+    { label: 'Nombre Latino', value: herb.latinName },
+    { label: 'Partes Usadas', value: herb.partsUsed },
+  ];
+  
+  // Propiedades para la ficha
+  const propertyFields = [
+    { label: 'Naturaleza', value: herb.nature },
+    { label: 'Temperatura', value: herb.temperature },
+    { label: 'Sabor', value: herb.taste },
+    { label: 'Meridianos', value: herb.meridian },
+  ];
+  
+  // Renderizar botones de acción
+  const renderActions = () => {
+    if (!showActions) return null;
+    
+    return (
+      <div className="flex items-center gap-1">
+        {onAdd && (
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAdd();
+            }}
+            className="h-6 px-2 text-xs"
+          >
+            Añadir
+          </Button>
+        )}
+      </div>
+    );
+  };
+  
+  // Compact card for list views
+  if (compact) {
+    return (
+      <>
+        <div 
+          className="mb-2 p-3 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 flex justify-between items-start transition-colors duration-200 cursor-pointer"
+          onClick={() => setIsDetailsOpen(true)}
+        >
+          <div className="flex-1">
+            <div className="flex items-center">
+              <h3 className="font-medium text-primary">{herb.pinyinName || herb.name}</h3>
+            </div>
+            {herb.latinName && (
+              <p className="text-xs text-gray-500 mt-1 italic">{herb.latinName}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            {herb.nature && (
+              <div 
+                className={`h-2.5 w-2.5 rounded-full my-auto ${getNatureColor(herb.nature)}`} 
+                title={herb.nature}
+              />
+            )}
+            {renderActions()}          
+          </div>
+        </div>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl flex items-center">
+                {herb.pinyinName || herb.name}
+                {herb.latinName && <span className="ml-2 text-sm font-normal text-gray-500 italic">{herb.latinName}</span>}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <Tabs defaultValue="info" className="w-full">
+              <TabsList className="grid grid-cols-4 mb-4">
+                <TabsTrigger value="info">Información Básica</TabsTrigger>
+                <TabsTrigger value="properties">Propiedades</TabsTrigger>
+                <TabsTrigger value="functions">Funciones</TabsTrigger>
+                <TabsTrigger value="advanced">Información Avanzada</TabsTrigger>
+              </TabsList>
+              
+              {/* Información Básica */}
+              <TabsContent value="info" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {basicFields.map((field, index) => (
+                    field.value ? (
+                      <div key={index} className="mb-2">
+                        <span className="font-semibold text-primary-700">{field.label}: </span>
+                        <span>{field.value}</span>
+                      </div>
+                    ) : null
+                  ))}
+                </div>
+              </TabsContent>
+              
+              {/* Propiedades */}
+              <TabsContent value="properties" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {propertyFields.map((field, index) => (
+                    field.value ? (
+                      <div key={index} className="mb-2">
+                        <span className="font-semibold text-primary-700">{field.label}: </span>
+                        <span>{field.value}</span>
+                      </div>
+                    ) : null
+                  ))}
+                </div>
+                
+                {renderTextArea('Propiedades', herb.properties)}
+                {renderTextArea('Contraindicaciones', herb.contraindications)}
+              </TabsContent>
+              
+              {/* Funciones */}
+              <TabsContent value="functions" className="space-y-4">
+                {renderTextArea('Efectos Farmacológicos', herb.pharmacologicalEffects)}
+              </TabsContent>
+            </Tabs>
+            
+            <DialogFooter className="pt-4 border-t">
+              <Button onClick={() => setIsDetailsOpen(false)}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
+}
+2. Componente FormulaCard.tsx
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Herb, FormulaWithHerbs } from '@/shared/schema';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Circle } from 'lucide-react';
+interface FormulaCardProps {
+  formula: FormulaWithHerbs;
+  onAdd?: () => void;
+  onAddHerbsIndividually?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  showActions?: boolean;
+  compact?: boolean;
+}
+export default function FormulaCard({ 
+  formula, 
+  onAdd, 
+  onAddHerbsIndividually,
+  onEdit, 
+  onDelete, 
+  showActions = true,
+  compact = true
+}: FormulaCardProps) {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  
+  // Renderizar campos de texto en formato de área
+  const renderTextArea = (label: string, content?: string) => {
+    if (!content) return null;
+    return (
+      <div className="mb-4">
+        <h4 className="font-semibold text-sm mb-1 text-primary-700">{label}</h4>
+        <div className="p-3 bg-gray-50 rounded-md border border-gray-200 text-sm whitespace-pre-wrap">
+          {content}
+        </div>
+      </div>
+    );
+  };
+  
+  // Renderizar botones de acción
+  const renderActions = () => {
+    if (!showActions) return null;
+    
+    return (
+      <div className="flex items-center gap-1">
+        {onAdd && (
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAdd();
+            }}
+            className="h-6 px-2 text-xs"
+          >
+            Añadir
+          </Button>
+        )}
+        {onAddHerbsIndividually && (
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddHerbsIndividually();
+            }}
+            className="h-6 px-2 text-xs text-green-600"
+          >
+            Añadir Hierbas
+          </Button>
+        )}
+      </div>
+    );
+  };
+  
+  // Calcular peso total de la fórmula
+  const getTotalWeight = () => {
+    return formula.herbs.reduce((total, herb) => total + (herb.grams || 0), 0);
+  };
+  
+  // Compact card for list views
+  if (compact) {
+    return (
+      <>
+        <div 
+          className="mb-2 p-3 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 flex justify-between items-start transition-colors duration-200 cursor-pointer"
+          onClick={() => setIsDetailsOpen(true)}
+        >
+          <div className="flex-1">
+            <div className="flex items-center">
+              <h3 className="font-medium text-yellow-600">{formula.pinyinName || formula.name}</h3>
+            </div>
+            {formula.englishName && (
+              <p className="text-xs text-gray-500 mt-1 italic">{formula.englishName}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            {renderActions()}          
+          </div>
+        </div>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl flex items-center">
+                {formula.pinyinName || formula.name}
+                {formula.englishName && <span className="ml-2 text-sm font-normal text-gray-500 italic">{formula.englishName}</span>}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <Tabs defaultValue="composition" className="w-full">
+              <TabsList className="grid grid-cols-3 mb-4">
+                <TabsTrigger value="composition">Composición</TabsTrigger>
+                <TabsTrigger value="description">Descripción</TabsTrigger>
+                <TabsTrigger value="cautions">Contraindicaciones</TabsTrigger>
+              </TabsList>
+              
+              {/* Composición */}
+              <TabsContent value="composition" className="space-y-4">
+                <div className="mb-4">
+                  <h3 className="font-semibold text-sm mb-2 text-primary-700">Composición de la Fórmula</h3>
+                  <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                    <div className="space-y-1">
+                      {formula.herbs.map((herb, index) => (
+                        <div key={herb.id} className="flex items-center border-b border-gray-100 pb-2 last:border-0 last:pb-0 pt-2">
+                          <div className="h-5 w-5 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 mr-2">
+                            <span className="text-xs">{index + 1}</span>
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <span className="font-medium text-sm">{herb.pinyinName || herb.name}</span>
+                                {herb.latinName && (
+                                  <p className="text-xs text-gray-500 italic">{herb.latinName}</p>
+                                )}
+                              </div>
+                              <div className="font-semibold text-xs text-yellow-600">
+                                {herb.grams && `${herb.grams}g`}
+                              </div>
+                            </div>
+                            {herb.function && (
+                              <p className="text-xs text-gray-600 mt-1">{herb.function}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-gray-200 flex justify-end">
+                      <span className="text-sm font-medium">Total: <span className="font-semibold">{getTotalWeight()}g</span></span>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              {/* Descripción */}
+              <TabsContent value="description" className="space-y-4">
+                {renderTextArea('Descripción', formula.description)}
+                {renderTextArea('Principios de Tratamiento', formula.treatmentPrinciples)}
+                {renderTextArea('Preparación', formula.preparation)}
+              </TabsContent>
+              
+              {/* Contraindicaciones */}
+              <TabsContent value="cautions" className="space-y-4">
+                {renderTextArea('Contraindicaciones', formula.contraindications)}
+              </TabsContent>
+            </Tabs>
+            
+            <DialogFooter className="pt-4 border-t">
+              <Button onClick={() => setIsDetailsOpen(false)}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
+}
+3. Fragmento para la Sección de Biblioteca
+// LibraryPanel.tsx (fragmento principal)
+// Estado para manejar el filtro por efectos
+const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
+const [searchTerm, setSearchTerm] = useState("");
+// Filtrar hierbas según términos de búsqueda y efectos
+const filteredHerbs = herbs.filter(herb => {
+  // Filtro por término de búsqueda
+  const searchMatch = 
+    !searchTerm || 
+    (herb.name && herb.name.toLowerCase().startsWith(searchTerm.toLowerCase())) ||
+    (herb.pinyinName && herb.pinyinName.toLowerCase().startsWith(searchTerm.toLowerCase()));
+  
+  // Filtro por efectos farmacológicos
+  const effectsMatch = 
+    selectedEffects.length === 0 || 
+    (herb.pharmacologicalEffects && 
+     selectedEffects.every(effect => 
+       herb.pharmacologicalEffects!.toLowerCase().includes(effect.toLowerCase())
+     ));
+  
+  return searchMatch && effectsMatch;
+});
+// Filtrar fórmulas según términos de búsqueda
+const filteredFormulas = formulas.filter(formula => {
+  // Filtro por término de búsqueda
+  const searchMatch = 
+    !searchTerm || 
+    (formula.name && formula.name.toLowerCase().startsWith(searchTerm.toLowerCase())) ||
+    (formula.pinyinName && formula.pinyinName.toLowerCase().startsWith(searchTerm.toLowerCase()));
+  
+  return searchMatch;
+});
+return (
+  <div className="w-full md:w-1/3 bg-white rounded-lg shadow-sm border p-4">
+    <h2 className="text-xl font-semibold mb-4 text-primary">Biblioteca</h2>
+    
+    {/* Buscador */}
+    <div className="mb-4">
+      <Input
+        type="text"
+        placeholder="Buscar por nombre..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full"
+      />
+    </div>
+    
+    {/* Pestañas para cambiar entre hierbas y fórmulas */}
+    <Tabs defaultValue="herbs" className="w-full">
+      <TabsList className="grid grid-cols-2 mb-4">
+        <TabsTrigger value="herbs">Hierbas</TabsTrigger>
+        <TabsTrigger value="formulas">Fórmulas</TabsTrigger>
+      </TabsList>
+      
+      {/* Contenido de Hierbas */}
+      <TabsContent value="herbs" className="space-y-4">
+        <div className="max-h-[70vh] overflow-y-auto pr-1">
+          {filteredHerbs.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>No se encontraron hierbas que coincidan con tu búsqueda.</p>
+            </div>
+          ) : (
+            <>
+              {filteredHerbs.map(herb => (
+                <HerbCard
+                  key={herb.id}
+                  herb={herb}
+                  onAdd={() => handleAddHerbWithQuantity(herb)}
+                  showActions
+                  compact
+                />
+              ))}
+            </>
+          )}
+        </div>
+      </TabsContent>
+      
+      {/* Contenido de Fórmulas */}
+      <TabsContent value="formulas" className="space-y-4">
+        <div className="max-h-[70vh] overflow-y-auto pr-1">
+          {filteredFormulas.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>No se encontraron fórmulas que coincidan con tu búsqueda.</p>
+            </div>
+          ) : (
+            <>
+              {filteredFormulas.map(formula => (
+                <FormulaCard
+                  key={formula.id}
+                  formula={formula}
+                  onAdd={() => handleAddFormulaWithQuantity(formula)}
+                  onAddHerbsIndividually={() => handleAddFormulaHerbsIndividuallyWithQuantity(formula)}
+                  showActions
+                  compact
+                />
+              ))}
+            </>
+          )}
+        </div>
+      </TabsContent>
+    </Tabs>
+    
+    {/* Diálogo para seleccionar cantidad */}
+    <QuantitySelectDialog
+      open={isQuantityDialogOpen && (selectedHerb !== null || selectedFormula !== null)}
+      onOpenChange={setIsQuantityDialogOpen}
+      title={dialogAction === 'addHerb' 
+        ? 'Añadir Hierba' 
+        : dialogAction === 'addFormula' 
+          ? 'Añadir Fórmula' 
+          : 'Añadir Hierbas Individuales'}
+      description={dialogAction === 'addHerb' 
+        ? `Indica la cantidad en gramos para ${selectedHerb?.name || ''}` 
+        : dialogAction === 'addFormula'
+          ? `Indica la cantidad en gramos para ${selectedFormula?.name || ''}` 
+          : `Indica la cantidad en gramos para calcular las proporciones de ${selectedFormula?.name || ''}`}
+      initialQuantity={dialogAction === 'addHerb' ? 10 : 100}
+      onConfirm={handleConfirmQuantity}
+    />
+  </div>
+);
+Estos componentes reproducen exactamente la apariencia visual y funcionalidad que tienes en tu aplicación actual, con:
+
+El nombre en pinyin como título principal
+El nombre farmacéutico (latín) en cursiva debajo
+El indicador visual de color para la naturaleza de la hierba
+Los botones de "Añadir" para hierbas y fórmulas
+El botón de "Añadir Hierbas" para las fórmulas
+Los diálogos con información detallada al hacer clic en cada tarjeta
+La visualización de componentes de las fórmulas con sus proporciones
+Este código es compatible con la funcionalidad de cálculo proporcional para las fórmulas que te proporcioné anteriormente.

@@ -1,0 +1,457 @@
+import React, { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+import { 
+  Table, TableBody, TableCaption, TableCell, 
+  TableHead, TableHeader, TableRow 
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { 
+  Dialog, DialogContent, DialogHeader, DialogTitle, 
+  DialogDescription, DialogFooter 
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Trash2, Edit, Search, Plus, ChevronRight, ChevronDown } from "lucide-react";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+export default function Herbs() {
+  const [location, navigate] = useLocation();
+  const { toast } = useToast();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [previewHerb, setPreviewHerb] = useState<any>(null);
+  const [expandedActions, setExpandedActions] = useState<number[]>([]);
+
+  // Consulta para obtener hierbas
+  const { data: herbs, isLoading } = useQuery({
+    queryKey: ["/api/herbs"],
+    retry: 1,
+  });
+
+  // Mutación para eliminar hierbas
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest(`/api/herbs/${id}`, { method: "DELETE" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/herbs"] });
+      toast({
+        title: "Hierba eliminada",
+        description: "La hierba ha sido eliminada correctamente",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar la hierba",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Filtrar hierbas basado en el término de búsqueda
+  const filteredHerbs = herbs?.filter((herb: any) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      herb.pinyinName?.toLowerCase().includes(searchLower) ||
+      herb.chineseName?.toLowerCase().includes(searchLower) ||
+      herb.englishName?.toLowerCase().includes(searchLower) ||
+      herb.latinName?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  // Manejar eliminación de hierba
+  const handleDeleteHerb = (id: number) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta hierba?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
+  // Alternar expansión de acciones
+  const toggleAction = (index: number) => {
+    setExpandedActions(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index) 
+        : [...prev, index]
+    );
+  };
+
+  return (
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Gestión de Hierbas</h1>
+        <Button onClick={() => navigate("/herbs/new")}>
+          <Plus className="mr-2 h-4 w-4" /> Nueva Hierba
+        </Button>
+      </div>
+
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <Input
+          placeholder="Buscar hierbas por nombre..."
+          className="pl-10"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableCaption>Listado de hierbas medicinales</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[180px]">Nombre Pinyin</TableHead>
+                <TableHead>Nombre Chino</TableHead>
+                <TableHead>Nombre Latino</TableHead>
+                <TableHead>Categoría</TableHead>
+                <TableHead>Naturaleza</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-10">
+                    Cargando hierbas...
+                  </TableCell>
+                </TableRow>
+              ) : filteredHerbs?.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-10">
+                    No se encontraron hierbas que coincidan con la búsqueda
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredHerbs?.map((herb: any) => (
+                  <TableRow key={herb.id}>
+                    <TableCell className="font-medium">
+                      <div 
+                        className="cursor-pointer hover:text-primary flex items-center"
+                        onClick={() => setPreviewHerb(herb)}
+                      >
+                        {herb.pinyinName}
+                        <ChevronRight className="ml-1 h-4 w-4" />
+                      </div>
+                    </TableCell>
+                    <TableCell className="chinese">{herb.chineseName}</TableCell>
+                    <TableCell>{herb.latinName}</TableCell>
+                    <TableCell>{herb.category}</TableCell>
+                    <TableCell>{herb.nature}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => navigate(`/herbs/${herb.id}`)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleDeleteHerb(herb.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Diálogo de vista previa de hierba */}
+      {previewHerb && (
+        <Dialog open={!!previewHerb} onOpenChange={(open) => !open && setPreviewHerb(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="sticky top-0 bg-white z-10 pb-2">
+              <DialogTitle className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <div className="flex items-center">
+                  <span className="text-xl font-bold mr-2">{previewHerb.pinyinName}</span>
+                  <span className="text-lg text-gray-600 chinese">{previewHerb.chineseName}</span>
+                </div>
+                {previewHerb.category && (
+                  <Badge className="ml-auto" variant="secondary">{previewHerb.category}</Badge>
+                )}
+              </DialogTitle>
+              <DialogDescription className="space-y-1">
+                {previewHerb.latinName && <div className="text-sm italic text-gray-500 font-medium">{previewHerb.latinName}</div>}
+                {previewHerb.englishName && <div className="text-sm text-gray-600">({previewHerb.englishName})</div>}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="my-4 overflow-y-visible">
+              {/* Información básica */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg mb-6">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-1">Naturaleza</h3>
+                  <p className="font-medium">{previewHerb.nature || "Not specified"}</p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-1">Sabor</h3>
+                  <p className="font-medium">{previewHerb.flavor || "Not specified"}</p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-1">Dosificación</h3>
+                  <p className="font-medium">{previewHerb.dosage || "Not specified"}</p>
+                </div>
+              </div>
+
+              {/* Meridianos */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-500 mb-2">Tropismo de Meridianos</h3>
+                <div className="flex flex-wrap gap-2">
+                  {Array.isArray(previewHerb.meridians) && previewHerb.meridians.length > 0 ? 
+                    previewHerb.meridians.map((meridian: string, index: number) => (
+                      <span 
+                        key={index} 
+                        className={`meridian-badge meridian-${meridian.replace(/\s+/g, '-')}`}
+                      >
+                        {meridian}
+                      </span>
+                    )) : 
+                    <p className="text-muted-foreground">No especificado</p>
+                  }
+                </div>
+              </div>
+
+              {/* Acciones y Funciones */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3 text-base border-b pb-2 text-primary">Acciones y Aplicaciones Clínicas</h3>
+                
+                {/* Funciones como acciones principales */}
+                {Array.isArray(previewHerb.functions) && previewHerb.functions.length > 0 && (
+                  <div className="space-y-4">
+                    {previewHerb.functions.map((func: string, index: number) => (
+                      <div key={index} className="mb-3">
+                        <div 
+                          className="p-2 flex justify-between items-center cursor-pointer hover:bg-muted/20 transition-colors rounded-md"
+                          onClick={() => toggleAction(index)}
+                        >
+                          <h4 className="font-bold text-gray-900">{func}</h4>
+                          <div className="text-gray-500">
+                            {expandedActions.includes(index) ? (
+                              <ChevronDown className="h-5 w-5" />
+                            ) : (
+                              <ChevronRight className="h-5 w-5" />
+                            )}
+                          </div>
+                        </div>
+                        
+                        {expandedActions.includes(index) && (
+                          <div className="p-3 pt-2">
+                            {/* Acciones secundarias */}
+                            {Array.isArray(previewHerb.secondaryActions) && previewHerb.secondaryActions
+                              .filter((action: any) => action.primaryFunction === func)
+                              .map((action: any, idx: number) => (
+                                <div key={idx} className="mb-3 last:mb-0">
+                                  <div className="mb-2 pl-3 py-1 border-l-2 border-primary/30">
+                                    {/* Acción secundaria */}
+                                    <div className="flex flex-col space-y-2">
+                                      <h5 className="font-medium text-sm mb-1 text-gray-900">{action.action}</h5>
+                                        
+                                      {/* Combinaciones de la acción secundaria (solo si no hay terciarias) */}
+                                      {Array.isArray(action.combinations) && action.combinations.length > 0 && 
+                                       !Array.isArray(action.tertiaryActions) && (
+                                        <div className="pl-2 mt-1 mb-2">
+                                          <div className="flex flex-col gap-2">
+                                            {/* Mostrar 'Usar individualmente' primero si existe */}
+                                            {action.combinations.some((combo: any) => 
+                                              Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually"
+                                            ) && (
+                                              <span className="inline px-1.5 py-1 border rounded-md bg-white shadow-sm text-xs font-medium text-gray-600 italic">
+                                                Usar individualmente
+                                              </span>
+                                            )}
+
+                                            {/* Mostrar las combinaciones de hierbas */}
+                                            <div className="flex flex-wrap gap-1">
+                                              {action.combinations.filter((combo: any) => 
+                                                !(Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually")
+                                              ).map((combo: any, comboIdx: number) => (
+                                                <span key={comboIdx} className="inline-flex px-1.5 py-1 border rounded-md bg-white shadow-sm">
+                                                  {Array.isArray(combo.herbs) ? (
+                                                    <div className="flex flex-nowrap items-center">
+                                                      {combo.herbs.map((herb: string, herbIdx: number) => (
+                                                        <React.Fragment key={herbIdx}>
+                                                          <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{herb}</Badge>
+                                                          {herbIdx < combo.herbs.length - 1 && (
+                                                            <span className="mx-0.5 text-gray-400">+</span>
+                                                          )}
+                                                        </React.Fragment>
+                                                      ))}
+                                                      {combo.formula && (
+                                                        <div className="ml-3 pl-3 border-l">
+                                                          <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                                                          <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  ) : (
+                                                    <div className="flex items-center">
+                                                      <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{combo.herb}</Badge>
+                                                      {combo.formula && (
+                                                        <div className="ml-3 pl-3 border-l">
+                                                          <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                                                          <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  )}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                        
+                                      {/* Acciones terciarias (si existen) */}
+                                      {Array.isArray(action.tertiaryActions) && action.tertiaryActions.length > 0 && (
+                                        <div className="space-y-2">
+                                          {action.tertiaryActions.map((tertiary: any, tertiaryIdx: number) => (
+                                            <div key={tertiaryIdx} className="mb-2 pl-4 border-l border-primary/20 py-1">
+                                              {/* Acción terciaria */}
+                                              <div className="text-sm italic text-gray-700 mb-1">{tertiary.description}</div>
+                                                
+                                              {/* Combinaciones para esta acción terciaria */}
+                                              {Array.isArray(tertiary.combinations) && tertiary.combinations.length > 0 && (
+                                                <div className="pl-2 mt-1">
+                                                  <div className="flex flex-col gap-2">
+                                                    {/* Mostrar 'Usar individualmente' primero si existe */}
+                                                    {tertiary.combinations.some((combo: any) => 
+                                                      Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually"
+                                                    ) && (
+                                                      <span className="inline px-1.5 py-1 border rounded-md bg-white shadow-sm text-xs font-medium text-gray-600 italic">
+                                                        Usar individualmente
+                                                      </span>
+                                                    )}
+
+                                                    {/* Mostrar las combinaciones de hierbas */}
+                                                    <div className="flex flex-wrap gap-1">
+                                                      {tertiary.combinations.filter((combo: any) => 
+                                                        !(Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually")
+                                                      ).map((combo: any, comboIdx: number) => (
+                                                        <span key={comboIdx} className="inline-flex px-1.5 py-1 border rounded-md bg-white shadow-sm">
+                                                          {Array.isArray(combo.herbs) ? (
+                                                            <div className="flex flex-nowrap items-center">
+                                                              {combo.herbs.map((herb: string, herbIdx: number) => (
+                                                                <React.Fragment key={herbIdx}>
+                                                                  <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{herb}</Badge>
+                                                                  {herbIdx < combo.herbs.length - 1 && (
+                                                                    <span className="mx-0.5 text-gray-400">+</span>
+                                                                  )}
+                                                                </React.Fragment>
+                                                              ))}
+                                                              {combo.formula && (
+                                                                <div className="ml-3 pl-3 border-l">
+                                                                  <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                                                                  <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                                                                </div>
+                                                              )}
+                                                            </div>
+                                                          ) : (
+                                                            <div className="flex items-center">
+                                                              <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{combo.herb}</Badge>
+                                                              {combo.formula && (
+                                                                <div className="ml-3 pl-3 border-l">
+                                                                  <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                                                                  <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                                                                </div>
+                                                              )}
+                                                            </div>
+                                                          )}
+                                                        </span>
+                                                      ))}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Si no hay funciones específicas pero sí aplicaciones generales */}
+                {(!Array.isArray(previewHerb.functions) || previewHerb.functions.length === 0) && previewHerb.applications && (
+                  <div className="p-4 border rounded-lg">
+                    <p className="text-sm">{previewHerb.applications}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Combinaciones comunes en formato de tabla si no se han mostrado arriba */}
+              {Array.isArray(previewHerb.commonCombinations) && previewHerb.commonCombinations.length > 0 && 
+               (!Array.isArray(previewHerb.functions) || previewHerb.functions.length === 0) && (
+                <div className="mb-6">
+                  <h3 className="font-semibold mb-3 text-base border-b pb-2 text-primary">Combinaciones Comunes</h3>
+                  <div className="border rounded-md overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-muted/50">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hierba</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aplicación</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {previewHerb.commonCombinations.map((combo: any, index: number) => (
+                          <tr key={index}>
+                            <td className="px-4 py-2 text-sm font-medium">{combo.herb}</td>
+                            <td className="px-4 py-2 text-sm text-gray-700">{combo.application}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Contraindicaciones */}
+              {previewHerb.contraindications && (
+                <div className="mb-6">
+                  <h3 className="font-semibold mb-2 text-base border-b pb-2 text-primary">Contraindicaciones</h3>
+                  <div className="p-3 bg-red-50 border border-red-100 rounded-md">
+                    <p className="text-sm text-red-800">{previewHerb.contraindications}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="mt-6 gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setPreviewHerb(null)}
+              >
+                Cerrar
+              </Button>
+              <Button 
+                onClick={() => {
+                  setPreviewHerb(null);
+                  navigate(`/herbs/${previewHerb.id}`);
+                }}
+              >
+                Editar Hierba
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}

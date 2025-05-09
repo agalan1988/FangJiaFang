@@ -1,0 +1,83 @@
+{
+  "pinyinName": "yin qiao san",
+  "chineseName": "",
+  "englishName": "ACRID AND COLD EXTERIOR RELEASING",
+  "actions": [
+    "Releases the exterior with acrid and cold herbs",
+    "Clears heat and eliminates toxins"
+  ],
+  "indications": "Fever, common cold, influenza",
+  "clinicalManifestations": "Exterior-excess, wind-cold síndrome: aversion to cold, fever, headache, neck stiffness, body aches and pains, absence of perspiration, dyspnea, a thin, white tongue coating, and a superficial, tight pulse",
+  "pharmacologicalEffects": "Effect on temperatura regulation, antitussive, antibiotic, cardiovascular, radioprotective",
+  "contraindications": "Individuals with ulceration, abscesses and sores; lin zheng; and patients with bleeding or excessive bleeding on the verge of collapse",
+  "cautions": "Elderly patients and individuals with generalized weakness",
+  "herbDrugInteractions": "Interferón-induced adverse reactions",
+  "composition": [
+      {
+        "herbId": "",
+        "pinyinName": "JIN YIN HUA",
+        "dosage": "0.165g",
+        "function": ""
+      },p
+      {
+        "herbId": "",
+        "pinyinName": "LIAN QIAO",
+        "dosage": "0.165g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "BO HE",
+        "dosage": "0.1g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "DAN DOU CHI",
+        "dosage": "0.08g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "NIU BANG ZI",
+        "dosage": "0.1g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "JIE GENG",
+        "dosage": "0.1g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "JING JIE",
+        "dosage": "0.065g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "DAN ZHU YE",
+        "dosage": "0.065g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "XIAN LU GEN",
+        "dosage": "0.08g",
+        "function": ""
+      },
+      {
+        "herbId": "",
+        "pinyinName": "GAN CAO",
+        "dosage": "0.08g",
+        "function": ""
+      }
+    ],
+  "modifications": [],
+  "modernResearch": [
+    [
+      "Fever, upper respiratory tract infection, cough, peripheral neuropathy, enuresis, mastitis"
+    ]
+  ]
+}

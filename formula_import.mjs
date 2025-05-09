@@ -1,0 +1,174 @@
+import fetch from 'node-fetch';
+
+async function importFormulas() {
+  try {
+    // Datos de las fórmulas
+    const formulasData = {
+      "GUI ZHI TANG": {
+        "grupo": "Wind-cold releasing",
+        "ingredientes": [
+          {
+            "planta": "GUI ZHI",
+            "gramos": 25.0
+          },
+          {
+            "planta": "BAI SHAO YAO",
+            "gramos": 25.0
+          },
+          {
+            "planta": "SHENG JIANG",
+            "gramos": 25.0
+          },
+          {
+            "planta": "DA ZAO",
+            "gramos": 8.5
+          },
+          {
+            "planta": "ZHI GAN CAO",
+            "gramos": 16.5
+          }
+        ]
+      },
+      "JING FANG BAI DU SAN": {
+        "grupo": "Wind-cold releasing",
+        "ingredientes": [
+          {
+            "planta": "BO HE",
+            "gramos": 8.5
+          },
+          {
+            "planta": "FU LING",
+            "gramos": 8.5
+          },
+          {
+            "planta": "ZHI KE",
+            "gramos": 8.5
+          },
+          {
+            "planta": "JIE GENG ",
+            "gramos": 8.5
+          },
+          {
+            "planta": "QIAN HU",
+            "gramos": 8.5
+          },
+          {
+            "planta": "CHAI HU",
+            "gramos": 8.5
+          },
+          {
+            "planta": "CHUAN XIONG",
+            "gramos": 8.5
+          },
+          {
+            "planta": "DU HUO",
+            "gramos": 8.5
+          },
+          {
+            "planta": "QIANG HUO",
+            "gramos": 8.5
+          },
+          {
+            "planta": "FANG FENG",
+            "gramos": 8.5
+          },
+          {
+            "planta": "JING JIE",
+            "gramos": 8.5
+          },
+          {
+            "planta": "GAN CAO",
+            "gramos": 4.5
+          },
+          {
+            "planta": "SHENG JIANG",
+            "gramos": 2.0
+          }
+        ]
+      },
+      "MA HUANG TANG": {
+        "grupo": "Wind-cold releasing",
+        "ingredientes": [
+          {
+            "planta": "MA HUANG",
+            "gramos": 30.0
+          },
+          {
+            "planta": "GUI ZHI",
+            "gramos": 20.0
+          },
+          {
+            "planta": "XING REN",
+            "gramos": 40.0
+          }
+        ]
+      },
+      "YIN QIAO SAN": {
+        "grupo": "Wind-cold releasing",
+        "ingredientes": [
+          {
+            "planta": "JIN YIN HUA",
+            "gramos": 16.5
+          },
+          {
+            "planta": "LIAN QIAO",
+            "gramos": 16.5
+          },
+          {
+            "planta": "BO HE",
+            "gramos": 10.0
+          },
+          {
+            "planta": "DAN DOU CHI",
+            "gramos": 8.0
+          },
+          {
+            "planta": "NIU BANG ZI",
+            "gramos": 10.0
+          },
+          {
+            "planta": "JIE GENG ",
+            "gramos": 10.0
+          },
+          {
+            "planta": "JING JIE",
+            "gramos": 6.5
+          },
+          {
+            "planta": "DAN ZHU YE",
+            "gramos": 6.5
+          },
+          {
+            "planta": "XIAN LU GEN",
+            "gramos": 8.0
+          },
+          {
+            "planta": "GAN CAO",
+            "gramos": 8.0
+          }
+        ]
+      }
+    };
+
+    console.log('Importando fórmulas...');
+    
+    // Enviar la solicitud al endpoint de importación
+    const response = await fetch('http://localhost:5000/api/formulas/import', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formulasData),
+    });
+
+    const result = await response.json();
+    console.log('Resultado de la importación:', result);
+    
+    return result;
+  } catch (error) {
+    console.error('Error al importar fórmulas:', error);
+    return { error: error.message };
+  }
+}
+
+importFormulas();

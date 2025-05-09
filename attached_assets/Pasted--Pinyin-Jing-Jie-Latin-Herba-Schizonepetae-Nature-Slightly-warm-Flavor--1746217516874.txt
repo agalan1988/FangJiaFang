@@ -1,0 +1,103 @@
+{
+  "Pinyin": "Jing Jie",
+  "Latin": "Herba Schizonepetae",
+  "Nature": "Slightly warm",
+  "Flavor": "Acrid",
+  "Meridians": ["LU", "LV"],
+  "ChineseActions": [
+    {
+      "ActionPrimary": "Releases the exterior and dispels wind",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Wind-heat or wind-cold",
+          "ActionsTertiary": [
+            {
+              "ActionTertiary": "Exterior wind-cold with aversion to cold, fever, headache and no perspiration",
+              "HerbsCombination": ["FANG FENG", "QIANG HUO"],
+              "Formula": "JING FANG BAI DU SAN"
+            },
+            {
+              "ActionTertiary": "Exterior wind-heat with fever, headache, sore throat and red eyes",
+              "HerbsCombination": ["BO HE", "LIAN QIAO", "JIN YIN HUA"],
+              "Formula": "YIN QIAO SAN"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ActionPrimary": "Dispels wind and relieves muscle spasms",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Postpartum spasms and trismus"
+        },
+        {
+          "ActionSecondary": "Muscle cramps and spasms caused by wind exposure"
+        }
+      ]
+    },
+    {
+      "ActionPrimary": "Dispels wind, vents rashes and alleviates itching",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Measles",
+          "HerbsCombination": ["CHAN TUI", "NIU BANG ZI", "BO HE", "JIN YIN HUA"]
+        },
+        {
+          "ActionSecondary": "Pruritic itching",
+          "HerbsCombination": ["FANG FENG"]
+        },
+        {
+          "ActionSecondary": "Early-stage of carbuncles, furuncles and abscesses with heat",
+          "HerbsCombination": ["LIAN QIAO", "BO HE", "NUY BANG ZI", "MU DAN PI", "ZHI ZI"]
+        },
+        {
+          "ActionSecondary": "Early-stage carbuncles, furuncles and abscesses with exterior signs and symptoms",
+          "HerbsCombination": ["FANG FENG", "JIN YIN HUA", "LIAN QIAO"]
+        }
+      ]
+    },
+    {
+      "ActionPrimary": "Stops bleeding",
+      "ActionsSecondary": [
+        {
+          "ActionSecondary": "Bleeding from various causes",
+          "ActionsTertiary": [
+            {
+              "ActionTertiary": "Epistaxis, hemoptysis and hematemesis",
+              "HerbsCombination": ["SHENG DI HUANG"]
+            },
+            {
+              "ActionTertiary": "Hematochezia or bleeding hemorrhoids",
+              "HerbsCombination": ["HUAI HUA", "CE BAI YE", "ZHI KE"],
+              "Formula": "HUAI HUA SAN"
+            },
+            {
+              "ActionTertiary": "Hematuria",
+              "HerbsCombination": ["XIAO JI", "SHENG DI HUANG", "OU JIE", "HUA SHI", "TONG CAO", "PU HUANG"]
+            },
+            {
+              "ActionTertiary": "Hypermenorrhea, abnormal uterine bleeding or postpartum bleeding",
+              "HerbsCombination": ["E JIAO", "AI YE", "GAN CAO"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "PharmacologicalEffects": [
+    "Antipyretic and diaphoretic",
+    "Antibiotic",
+    "Hemostatic"
+  ],
+  "Cautions": [
+    "Pregnancy",
+    "Liver yang rising",
+    "Yin deficiency fire"
+  ],
+  "Contraindications": [
+    "Spasms because of Liver wind",
+    "Fully erupted measles",
+    "Open sores"
+  ]
+}

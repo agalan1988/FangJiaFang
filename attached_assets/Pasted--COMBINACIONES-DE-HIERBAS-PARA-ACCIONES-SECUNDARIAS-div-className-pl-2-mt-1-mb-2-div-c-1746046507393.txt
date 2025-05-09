@@ -1,0 +1,51 @@
+{/* COMBINACIONES DE HIERBAS PARA ACCIONES SECUNDARIAS */}
+<div className="pl-2 mt-1 mb-2">
+  <div className="flex flex-col gap-2">
+    {/* Mostrar 'Usar individualmente' primero si existe */}
+    {action.combinations.some((combo) => 
+      Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually"
+    ) && (
+      <span className="inline px-1.5 py-1 border rounded-md bg-white shadow-sm text-xs font-medium text-gray-600 italic">
+        Usar individualmente
+      </span>
+    )}
+
+    {/* Mostrar las combinaciones de hierbas */}
+    <div className="flex flex-wrap gap-1">
+      {action.combinations.filter((combo) => 
+        !(Array.isArray(combo.herbs) && combo.herbs.length === 1 && combo.herbs[0] === "Individually")
+      ).map((combo, comboIdx) => (
+        <span key={comboIdx} className="inline-flex px-1.5 py-1 border rounded-md bg-white shadow-sm">
+          {Array.isArray(combo.herbs) ? (
+            <div className="flex flex-nowrap items-center">
+              {combo.herbs.map((herb, herbIdx) => (
+                <React.Fragment key={herbIdx}>
+                  <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{herb}</Badge>
+                  {herbIdx < combo.herbs.length - 1 && (
+                    <span className="mx-0.5 text-gray-400">+</span>
+                  )}
+                </React.Fragment>
+              ))}
+              {combo.formula && (
+                <div className="ml-3 pl-3 border-l">
+                  <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                  <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Badge className="text-xs bg-white text-primary border border-primary font-medium text-[10px] py-0.5 whitespace-nowrap">{combo.herb}</Badge>
+              {combo.formula && (
+                <div className="ml-3 pl-3 border-l">
+                  <span className="text-[10px] font-medium text-gray-500">Fórmula: </span>
+                  <span className="text-[10px] font-medium text-primary">{combo.formula}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>

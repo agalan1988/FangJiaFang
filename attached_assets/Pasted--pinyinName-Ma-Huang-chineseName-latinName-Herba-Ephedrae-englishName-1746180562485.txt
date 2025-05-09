@@ -1,0 +1,128 @@
+{
+  "pinyinName": "Ma Huang",
+  "chineseName": "麻黄",
+  "latinName": "Herba Ephedrae",
+  "englishName": "",
+  "category": "Wind-cold releasing herbs",
+  "nature": "warm",
+  "flavor": "Acrid, bitter",
+  "meridians": ["LU", "UB"],
+  "dosage": "",
+  "preparation": "",
+  "functions": [
+    "Releases the exterior through diaphoresis",
+    "Relieves wheezing and dyspnea, stops cough",
+    "Regulates water circulation and relieves edema",
+    "Disperses cold"
+  ],
+  "applications": "",
+  "contraindications": "",
+  "properties": "",
+  "secondaryActions": [
+    {
+      "primaryFunction": "Releases the exterior through diaphoresis",
+      "action": "exterior-excess, wind-cold condition",
+      "combinations": [
+        {
+          "herbs": ["GUI ZHI"],
+          "formula": "MA HUANG TANG"
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Relieves wheezing and dyspnea, stops cough",
+      "action": "Wind-cold constriction of the Lung leading to Lung qi reversal",
+      "tertiaryActions": [
+        {
+          "description": "Cough from wind-cold attacking the exterior and constricting Lung qi",
+          "combinations": [
+            {
+              "herbs": ["XING REN"]
+            }
+          ]
+        },
+        {
+          "description": "Wheezing or cough caused by Lung heat",
+          "combinations": [
+            {
+              "herbs": ["SHI GAO", "XING REN"],
+              "formula": "MA XING GAN SHI TANG"
+            }
+          ]
+        },
+        {
+          "description": "Wheezing or cough from wind-cold attack at the exterior and cold stagnation in the interior",
+          "combinations": [
+            {
+              "herbs": ["GAN JIANG", "XI XIN", "BAN XIA"],
+              "formula": "XIAO QING LONG TANG"
+            }
+          ]
+        },
+        {
+          "description": "Wheezing and dyspnea caused by stagnation of qi and phlegm",
+          "combinations": [
+            {
+              "herbs": ["XING REN", "CHEN PI", "HOU PO"],
+              "formula": "SHEN MI TANG"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Regulates water circulation and relieves edema",
+      "action": "Edema with exterior syndrome",
+      "combinations": [
+        {
+          "herbs": ["SHENG JIANG", "BAI ZHU", "GAN CAO"],
+          "formula": "YUE BI JIA ZHU TANG"
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Disperses cold",
+      "action": "Bi Zheng (painful obstruction syndrome)",
+      "tertiaryActions": [
+        {
+          "description": "Bi Zheng caused by wind-damp",
+          "combinations": [
+            {
+              "herbs": ["YI YI REN", "XING REN", "GAN CAO"]
+            }
+          ]
+        },
+        {
+          "description": "Yin sores",
+          "combinations": [
+            {
+              "herbs": ["SHU DI HUANG", "BAI JIE ZI", "LU JIAO JIAO"]
+            }
+          ]
+        },
+        {
+          "description": "Arteritis obliterans, obliterating phlebitis or Raynaud´s disease",
+          "combinations": [
+            {
+              "herbs": ["SHU DI HUANG", "BAI JIE ZI", "LU JIAO JIAO", "ROU GUI", "GAN CAO"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "commonCombinations": null,
+  "pharmacologicalEffects": [
+    "Diaphoresis",
+    "Antipyretic",
+    "Respiratory",
+    "Diuresis",
+    "Cardiovascular",
+    "CNS stimulant",
+    "Antibiotic"
+  ],
+  "laboratoryEffects": [
+    "CHOLESTEROL/TRIGLYCERIDE REDUCING",
+    "IRON ABSORTION DECREASE"
+  ]
+}

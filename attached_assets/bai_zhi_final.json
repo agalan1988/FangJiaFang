@@ -1,0 +1,343 @@
+{
+  "pinyinName": "Bai Zhi",
+  "chineseName": "白芷",
+  "latinName": "Radix Angelicae Dahuricae",
+  "englishName": "",
+  "category": "Wind-cold releasing herbs",
+  "nature": "warm",
+  "flavor": "Acrid",
+  "meridians": [
+    "LU",
+    "ST",
+    "SP"
+  ],
+  "dosage": "",
+  "preparation": "",
+  "functions": [
+    "Releases the exterior, dispels wind and opens orifices",
+    "Dispels cold and relieves pain",
+    "Reduces swelling, expels pus and eliminates toxins",
+    "Dispels dampness and treats leukorrhea and diarrhea"
+  ],
+  "applications": "",
+  "contraindications": "Febrile disorders",
+  "cautions": "Yin-deficient fire, Liver yang rising, Liver or Kidney yin deficiency",
+  "clinicalStudiesAndResearch": [
+    "Headache",
+    "Vitiligo",
+    "Psoriasis"
+  ],
+  "properties": "",
+  "secondaryActions": [
+    {
+      "primaryFunction": "Releases the exterior, dispels wind and opens orifices",
+      "action": "Wind-cold",
+      "tertiaryActions": [
+        {
+          "description": "Wind cold with headache, muscle aches, nasal obstruction and clear nasal discharge",
+          "combinations": [
+            {
+              "herbs": [
+                "SHENG JIANG",
+                "DAN DOU CHI"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Sinusitis and rhinitis with turbid white nasal discharge or nasal obstruction due to cold",
+          "combinations": [
+            {
+              "herbs": [
+                "CANG ER ZI",
+                "XIN YI HUA"
+              ],
+              "formula": "CANG ER SAN"
+            }
+          ]
+        },
+        {
+          "description": "Sinusitis and rhinitis with turbid yellow nasal discharge or nasal obstruction caused by heat",
+          "combinations": [
+            {
+              "herbs": [
+                "SHI GAO",
+                "HUANG QIN",
+                "PU GONG YING"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Dispels cold and relieves pain",
+      "action": "Pain along the Stomach channel",
+      "tertiaryActions": [
+        {
+          "description": "Headache and nasal obstruction from wind-cold",
+          "combinations": [
+            {
+              "herbs": [
+                "QIANG HUO",
+                "FANG FENG"
+              ],
+              "formula": "JIU WEI QIANG HUO TANG"
+            }
+          ]
+        },
+        {
+          "description": "Yangming channel headache with pain around the eyes, frontal headache, and toothache",
+          "combinations": [
+            {
+              "herbs": [
+                "FANG FENG",
+                "CHUAN XIONG"
+              ],
+              "formula": "CHUAN XIONG CHA TIAO SAN"
+            }
+          ]
+        },
+        {
+          "description": "Headache with excessive cold",
+          "combinations": [
+            {
+              "herbs": [
+                "XI XIN",
+                "WU TOU"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Headache with excessive heat",
+          "combinations": [
+            {
+              "herbs": [
+                "CHUAN XIONG",
+                "SHI GAO",
+                "JING JIE"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Toothache",
+          "combinations": [
+            {
+              "herbs": []
+            }
+          ]
+        },
+        {
+          "description": "Muscle aches and pain caused by wind and dampness",
+          "combinations": [
+            {
+              "herbs": [
+                "QIANG HUO",
+                "GUI ZHI",
+                "CHUAN XIONG"
+              ],
+              "formula": "SHAN ZHONG XIA TONG YONG TONG FENG WAN"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Reduces swelling, expels pus and eliminates toxins",
+      "action": "Sores, carbuncles or furuncles with pus and swelling",
+      "tertiaryActions": [
+        {
+          "description": "Rashes and itching caused by wind and dampness",
+          "combinations": [
+            {
+              "herbs": [
+                "QIN JIAO",
+                "JING JIE",
+                "XIAN CAO"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Dermatological disorders with abscesses and swelling",
+          "combinations": [
+            {
+              "herbs": [
+                "JIN YIN HUA",
+                "CHUAN SHAN JIA",
+                "TIAN HUA FEN"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Formation of pus without ulceration",
+          "combinations": [
+            {
+              "herbs": [
+                "NIU BANG ZI",
+                "JIN YIN HUA",
+                "CHUAN SHAN JIA",
+                "ZAO JIAO CI"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Formation of pus with ulceration or prolonged delay in healing",
+          "combinations": [
+            {
+              "herbs": [
+                "DANG SHEN",
+                "HUANG QI",
+                "JIN YIN HUA",
+                "GAN CAO"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Acute appendicitis or intestinal abscess",
+          "combinations": [
+            {
+              "herbs": [
+                "MU DAN PI",
+                "DONG GUA ZI",
+                "BAI JIANG CAO",
+                "HONG TENG",
+                "DA HUANG"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Breast abscesses",
+          "combinations": [
+            {
+              "herbs": [
+                "CHI SHAO",
+                "HONG HUA",
+                "PU GONG YING",
+                "ZI HUA DI DING",
+                "YE JU HUA",
+                "JIN YIN HUA"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Dispels dampness and treats leukorrhea and diarrhea",
+      "action": "Leukorrhea and diarrhea",
+      "tertiaryActions": [
+        {
+          "description": "White, turbid leukorrhea due to cold and dampness",
+          "combinations": [
+            {
+              "herbs": [
+                "HAI PIAO XIAO",
+                "BAI ZHU",
+                "FU LING",
+                "JI GUAN HUA"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Yellow, turbid leukorrhea caused by heat and dampness",
+          "combinations": [
+            {
+              "herbs": [
+                "HUANG BAI",
+                "CHE QIAN ZI"
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Chronic diarrhea due to Spleen deficiency and damp accumulation",
+          "combinations": [
+            {
+              "herbs": [
+                "ROU DOU KOU",
+                "HE ZI",
+                "FU LING",
+                "QIAN SHI"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "commonCombinations": [
+    {
+      "indication": "Wind-cold induced headaches, especially at the vertex",
+      "combination": "Bai Zhi + Gao Ben"
+    },
+    {
+      "indication": "Wind-cold induced headaches, sinus headaches, and orbital headaches",
+      "combination": "Bai Zhi + Xi Xin"
+    },
+    {
+      "indication": "Ulcerated boils where pus has not discharged",
+      "combination": "Bai Zhi + Jie Geng"
+    },
+    {
+      "indication": "Headache",
+      "combination": "Bai Zhi + Chuan Xiong"
+    },
+    {
+      "indication": "Wind-cold headache",
+      "combination": "Bai Zhi + Chuan Xiong + Jing Jie + Zi Su Ye"
+    },
+    {
+      "indication": "Wind-heat headache",
+      "combination": "Bai Zhi + Chuan Xiong + Ju Hua + Tea Leaves"
+    },
+    {
+      "indication": "Pain associated with ulcers",
+      "combination": "Bai Zhi + Gan Cao"
+    },
+    {
+      "indication": "Breast abscesses",
+      "combination": "Bai Zhi + Pu Gong Ying + Gua Lou + Bei Mu"
+    },
+    {
+      "indication": "Nasal congestion",
+      "combination": "Bai Zhi + Xi Xin + Xin Yi Hua + Cang Er Zi"
+    },
+    {
+      "indication": "Wind-heat headache",
+      "combination": "Bai Zhi + Huang Qin"
+    },
+    {
+      "indication": "Toothache",
+      "combination": "Bai Zhi + Shi Gao + Sheng Ma"
+    },
+    {
+      "indication": "Damp-cold vaginal discharge",
+      "combination": "Bai Zhi + Hai Piao Xiao"
+    },
+    {
+      "indication": "Damp-heat vaginal discharge",
+      "combination": "Bai Zhi + Huang Bai + Che Qian Zi"
+    }
+  ],
+  "pharmacologicalEffects": [
+    "Antibiotic",
+    "Anti-inflammatory",
+    "Analgesic and antipyretic",
+    "Antispasmodic",
+    "Lowers heart rate and decreases blood pressure",
+    "Excites the respiratory system",
+    "Stimulates the nervous system"
+  ],
+  "laboratoryEffects": [],
+  "herbDrugInteractions": [
+    "Liver metabolism"
+  ]
+}

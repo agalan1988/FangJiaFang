@@ -1,0 +1,78 @@
+{
+  "pinyinName": "Cang Er Zi",
+  "chineseName": "苍耳子",
+  "latinName": "Fructus Xanthii",
+  "englishName": "",
+  "category": "Wind-cold releasing herbs",
+  "nature": "warm",
+  "flavor": "Bitter, acrid",
+  "meridians": ["LU", "LV"],
+  "dosage": "",
+  "preparation": "",
+  "functions": [
+    "Opens nasal passages and relieves pain",
+    "Dispels wind and dampness"
+  ],
+  "applications": "",
+  "contraindications": "",
+  "cautions": "",
+  "clinicalStudiesAndResearch": [],
+  "properties": "",
+  "secondaryActions": [
+    {
+      "primaryFunction": "Opens nasal passages and relieves pain",
+      "action": "Sinus disorders with headache",
+      "tertiaryActions": [
+        {
+          "description": "Sinusitis or rhinitis with nasal obstruction, loss of smell and nasal discharge",
+          "combinations": [
+            {
+              "herbs": ["BAI ZHI", "XIN YI HUA"],
+              "formula": "CANG ER SAN"
+            }
+          ]
+        },
+        {
+          "description": "Sinus headache caused by wind-cold",
+          "combinations": [
+            {
+              "herbs": ["FANG FENG", "BAI ZHI", "GAO BEN"],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "primaryFunction": "Dispels wind and dampness",
+      "action": "Bi Zheng (painful obstruction syndrome)",
+      "tertiaryActions": [
+        {
+          "description": "Muscle aches and pain",
+          "combinations": [
+            {
+              "herbs": ["WEI LING XIAN", "CHUAN XIONG", "CANG ZHU"],
+              "formula": ""
+            }
+          ]
+        },
+        {
+          "description": "Dermatological disorders with itching and rash",
+          "combinations": [
+            {
+              "herbs": ["BAI JI LI", "DI FU ZI", "CHAN TUI", "BAI XIAN PI", "JING JIE"],
+              "formula": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "commonCombinations": null,
+  "pharmacologicalEffects": [
+    "Antidiabetic",
+    "Antitussive"
+  ],
+  "laboratoryEffects": [],
+  "herbDrugInteractions": []
+}
